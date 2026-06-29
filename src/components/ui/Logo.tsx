@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 
+const logoSrc = `${import.meta.env.BASE_URL}curio-logo.png`;
+
 export function LogoMark({ className }: { className?: string }) {
   return (
     <span
@@ -9,7 +11,7 @@ export function LogoMark({ className }: { className?: string }) {
       )}
       aria-hidden="true"
     >
-      <img src="/curio-logo.png" alt="" className="h-6 w-8 object-contain" />
+      <img src={logoSrc} alt="" className="h-6 w-8 object-contain" />
     </span>
   );
 }
@@ -21,7 +23,7 @@ export function Logo({ className, markOnly = false }: { className?: string; dark
 
   return (
     <span className={cn("inline-flex items-center select-none", className)}>
-      <img src="/curio-logo.png" alt="Curio" className="h-full w-auto object-contain" />
+      <img src={logoSrc} alt="Curio" className="h-full w-auto object-contain" />
     </span>
   );
 }
