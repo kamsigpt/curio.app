@@ -23,7 +23,7 @@ jobs:
           cache: npm
 
       - run: npm ci
-      - run: npx vite build
+      - run: npx vite build --base=/curio.app/
       - run: touch dist/.nojekyll
 
       - uses: peaceiris/actions-gh-pages@v4
