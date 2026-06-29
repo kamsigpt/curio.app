@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
@@ -22,7 +22,7 @@ export default function App() {
     <AuthProvider>
       <CartProvider>
         <CourseProvider>
-        <BrowserRouter>
+        <HashRouter>
           <ScrollToTop />
           <Layout>
             <Routes>
@@ -40,7 +40,7 @@ export default function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
-        </BrowserRouter>
+        </HashRouter>
         </CourseProvider>
         </CartProvider>
     </AuthProvider>
