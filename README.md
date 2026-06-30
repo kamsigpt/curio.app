@@ -16,10 +16,11 @@ provided brand guideline.
   enrollments and cart
 - **lucide-react** — icon set
 
-The app runs in a fully working **demo mode** with no setup: a local mock catalogue
-(`src/data/mockData.ts`) and a local "fake" auth/session in `localStorage` let you click through
-every page immediately. Once you add real Supabase credentials, auth and enrollments switch
-automatically to the real backend (see `src/lib/supabase.ts` → `isSupabaseConfigured`).
+The app runs in **live development mode** connected to a real Supabase project for auth and data
+storage. Course catalogue, user profiles, enrollments, and cart all sync with Supabase tables
+(`categories`, `instructors`, `courses`, `cart_items`, `enrollments`). When Supabase credentials
+are not present, the app falls back to a local mock catalogue (`src/data/mockData.ts`) and
+"fake" auth in `localStorage` (see `src/lib/supabase.ts` → `isSupabaseConfigured`).
 
 ## Getting started
 
@@ -30,19 +31,23 @@ npm run dev
 
 Open http://localhost:5173.
 
-## Connecting Supabase (optional, for production)
+## Supabase setup (required for auth & data)
 
 1. Create a project at [supabase.com](https://supabase.com).
-2. In the SQL editor, run `supabase/schema.sql`. It creates `profiles`, `categories`,
-   `instructors`, `courses`, `reviews`, `enrollments`, `cart_items`, row-level security
-   policies, and a trigger that creates a `profiles` row on sign-up.
+2. In the SQL editor, run **`supabase/schema.sql`** — creates all tables, RLS policies, and a
+   trigger that auto-creates a `profiles` row on sign-up.
 3. Copy `.env.example` to `.env.local` and fill in your project's URL and anon key
    (Supabase dashboard → Settings → API).
-4. Seed `categories`, `instructors` and `courses` with your real catalogue (the shape of each
-   row matches the types in `src/lib/types.ts` and the mock data in `src/data/mockData.ts` —
-   you can adapt that file into seed SQL or a one-off script).
-5. Restart the dev server. Sign-up/login now create real Supabase Auth users, and purchases
-   insert rows into `enrollments`.
+4. (Optional) Run **`supabase/seed.sql`** in the SQL editor to populate categories, instructors,
+   and courses with sample data.
+5. Enable **Google OAuth** in Supabase dashboard → Authentication → Providers → Google, and add
+   your OAuth Client ID + Secret from Google Cloud Console. Add this redirect URI to your
+   Google Cloud Console:
+   ```
+   https://<your-project>.supabase.co/auth/v1/callback
+   ```
+6. Restart the dev server. Sign-up/login now create real Supabase Auth users, cart items sync
+   to the `cart_items` table, and purchases insert rows into `enrollments`.
 
 ## Project structure
 

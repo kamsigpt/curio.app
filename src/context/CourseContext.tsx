@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { Course } from "@/lib/types";
+import { supabase } from "@/lib/supabase";
 import { courses as mockCourses } from "@/data/mockData";
 
 interface CourseContextValue {
@@ -11,7 +12,26 @@ interface CourseContextValue {
 const CourseContext = createContext<CourseContextValue | undefined>(undefined);
 const STORAGE_KEY = "curio_submitted_courses_v1";
 
+async function fetchCourses(): Promise<Course[]> {
+  const { data } = await supabase
+    .from("courses")
+    .select("*, instructor:instructors(*), category:categories(*)");
+  if (!data || data.length === 0) return [];
+  return data.map((row: Record<string, unknown>) => ({
+    ...(row as any),
+    instructor: row.instructor as Course["instructor"],
+    category: row.category as Course["category"],
+    curriculum: (row.curriculum ?? []) as Course["curriculum"],
+    tags: (row.tags ?? []) as Course["tags"],
+    what_you_will_learn: (row.what_you_will_learn ?? []) as Course["what_you_will_learn"],
+    requirements: (row.requirements ?? []) as Course["requirements"],
+    reviews: [],
+    last_updated: "",
+  })) as Course[];
+}
+
 export function CourseProvider({ children }: { children: ReactNode }) {
+  const [supabaseCourses, setSupabaseCourses] = useState<Course[] | null>(null);
   const [submitted, setSubmitted] = useState<Course[]>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -25,7 +45,13 @@ export function CourseProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(submitted));
   }, [submitted]);
 
-  const courses = [...mockCourses, ...submitted];
+  useEffect(() => {
+    fetchCourses().then(setSupabaseCourses);
+  }, []);
+
+  const courses = supabaseCourses && supabaseCourses.length > 0
+    ? [...supabaseCourses, ...submitted]
+    : [...mockCourses, ...submitted];
 
   function addCourse(course: Course) {
     setSubmitted((prev) => [...prev, course]);
