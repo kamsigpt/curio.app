@@ -10,7 +10,6 @@
 create extension if not exists "uuid-ossp";
 
 -- Profiles --------------------------------------------------------------------
--- One row per authenticated user, keyed to Supabase Auth's auth.users.
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   full_name text not null default 'Curio Learner',
@@ -22,14 +21,17 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
+drop policy if exists "Profiles are readable by everyone" on public.profiles;
 create policy "Profiles are readable by everyone"
   on public.profiles for select
   using (true);
 
+drop policy if exists "Users can insert their own profile" on public.profiles;
 create policy "Users can insert their own profile"
   on public.profiles for insert
   with check (auth.uid() = id);
 
+drop policy if exists "Users can update their own profile" on public.profiles;
 create policy "Users can update their own profile"
   on public.profiles for update
   using (auth.uid() = id);
@@ -44,6 +46,7 @@ create table if not exists public.categories (
 );
 
 alter table public.categories enable row level security;
+drop policy if exists "Categories are public" on public.categories;
 create policy "Categories are public" on public.categories for select using (true);
 
 -- Instructors -------------------------------------------------------------------
@@ -60,7 +63,9 @@ create table if not exists public.instructors (
 );
 
 alter table public.instructors enable row level security;
+drop policy if exists "Instructors are public" on public.instructors;
 create policy "Instructors are public" on public.instructors for select using (true);
+drop policy if exists "Instructors manage their own profile" on public.instructors;
 create policy "Instructors manage their own profile"
   on public.instructors for all
   using (auth.uid() = user_id)
@@ -74,7 +79,7 @@ create table if not exists public.courses (
   subtitle text,
   description text,
   thumbnail_url text,
-  provider text not null default 'Curio Original', -- e.g. Udemy, Coursera Partner, Independent Tutor
+  provider text not null default 'Curio Original',
   instructor_id uuid references public.instructors(id) on delete set null,
   category_id uuid references public.categories(id) on delete set null,
   level text not null default 'All Levels' check (level in ('Beginner', 'Intermediate', 'Advanced', 'All Levels')),
@@ -91,7 +96,7 @@ create table if not exists public.courses (
   tags text[] not null default '{}',
   what_you_will_learn text[] not null default '{}',
   requirements text[] not null default '{}',
-  curriculum jsonb not null default '[]', -- [{ id, title, lessons: [{id,title,duration_minutes,is_preview}] }]
+  curriculum jsonb not null default '[]',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -101,7 +106,9 @@ create index if not exists courses_provider_idx on public.courses(provider);
 create index if not exists courses_slug_idx on public.courses(slug);
 
 alter table public.courses enable row level security;
+drop policy if exists "Courses are public" on public.courses;
 create policy "Courses are public" on public.courses for select using (true);
+drop policy if exists "Instructors manage their own courses" on public.courses;
 create policy "Instructors manage their own courses"
   on public.courses for all
   using (
@@ -125,10 +132,13 @@ create table if not exists public.reviews (
 create index if not exists reviews_course_idx on public.reviews(course_id);
 
 alter table public.reviews enable row level security;
+drop policy if exists "Reviews are public" on public.reviews;
 create policy "Reviews are public" on public.reviews for select using (true);
+drop policy if exists "Users can write their own reviews" on public.reviews;
 create policy "Users can write their own reviews"
   on public.reviews for insert
   with check (auth.uid() = user_id);
+drop policy if exists "Users can update their own reviews" on public.reviews;
 create policy "Users can update their own reviews"
   on public.reviews for update
   using (auth.uid() = user_id);
@@ -145,17 +155,20 @@ create table if not exists public.enrollments (
 );
 
 alter table public.enrollments enable row level security;
+drop policy if exists "Users see their own enrollments" on public.enrollments;
 create policy "Users see their own enrollments"
   on public.enrollments for select
   using (auth.uid() = user_id);
+drop policy if exists "Users create their own enrollments" on public.enrollments;
 create policy "Users create their own enrollments"
   on public.enrollments for insert
   with check (auth.uid() = user_id);
+drop policy if exists "Users update their own enrollment progress" on public.enrollments;
 create policy "Users update their own enrollment progress"
   on public.enrollments for update
   using (auth.uid() = user_id);
 
--- Cart items (optional server-side cart sync) -----------------------------
+-- Cart items --------------------------------------------------------------------
 create table if not exists public.cart_items (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -165,6 +178,7 @@ create table if not exists public.cart_items (
 );
 
 alter table public.cart_items enable row level security;
+drop policy if exists "Users manage their own cart" on public.cart_items;
 create policy "Users manage their own cart"
   on public.cart_items for all
   using (auth.uid() = user_id)

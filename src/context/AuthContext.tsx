@@ -13,6 +13,7 @@ interface AuthContextValue {
   userEmail: string;
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: string | null }>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
+  signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   adminEmails: string[];
   addAdmin: (email: string) => void;
@@ -187,6 +188,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: null };
   }
 
+  async function signInWithGoogle() {
+    if (!isSupabaseConfigured) return;
+    await supabase.auth.signInWithOAuth({ provider: "google" });
+  }
+
   async function signOut() {
     if (!isSupabaseConfigured) {
       localStorage.removeItem(DEMO_KEY);
@@ -212,7 +218,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
       <AuthContext.Provider
-        value={{ session, profile, loading, isDemo: !isSupabaseConfigured, userEmail, signUp, signIn, signOut, adminEmails, addAdmin, removeAdmin, getAdminPermissions, setAdminPermissions, isSuperAdmin }}
+        value={{ session, profile, loading, isDemo: !isSupabaseConfigured, userEmail, signUp, signIn, signInWithGoogle, signOut, adminEmails, addAdmin, removeAdmin, getAdminPermissions, setAdminPermissions, isSuperAdmin }}
       >
       {children}
     </AuthContext.Provider>

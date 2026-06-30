@@ -5,7 +5,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { useAuth } from "@/context/AuthContext";
 
 export function Login() {
-  const { signIn, isDemo } = useAuth();
+  const { signIn, signInWithGoogle, isDemo } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -100,7 +100,7 @@ export function Login() {
           </div>
 
           <button
-            onClick={() => {}}
+            onClick={() => { void signInWithGoogle(); }}
             className="mt-4 flex w-full items-center justify-center gap-3 rounded-full border border-cool-100 py-3 text-sm font-medium text-ink transition hover:border-[#10CDB2] hover:bg-mint-50"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

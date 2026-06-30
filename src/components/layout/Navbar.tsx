@@ -38,9 +38,6 @@ export function Navbar() {
         </form>
 
         <nav className="ml-auto hidden items-center gap-2 rounded-full border border-white/50 bg-white/35 p-1 text-sm font-semibold text-cool-700 md:flex">
-          <Link to="/about" className="rounded-full px-4 py-2 transition hover:bg-white/75 hover:text-mint-600">
-            About
-          </Link>
           <Link to="/marketplace" className="rounded-full px-4 py-2 transition hover:bg-white/75 hover:text-mint-600">
             View courses
           </Link>
@@ -145,9 +142,6 @@ export function Navbar() {
             />
           </form>
           <div className="flex flex-col gap-1 text-sm font-medium text-cool-700">
-            <Link to="/about" className="rounded-lg px-2 py-2.5 hover:bg-cool-50" onClick={() => setMobileOpen(false)}>
-              About
-            </Link>
             <Link to="/marketplace" className="rounded-lg px-2 py-2.5 hover:bg-cool-50" onClick={() => setMobileOpen(false)}>
               View courses
             </Link>
