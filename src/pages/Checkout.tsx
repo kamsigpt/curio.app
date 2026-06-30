@@ -6,12 +6,30 @@ import { useAuth } from "@/context/AuthContext";
 import { formatPrice } from "@/lib/utils";
 import { enrollInCourses } from "@/lib/enrollment";
 
+declare global {
+  interface Window {
+    PaystackPop: {
+      setup(config: {
+        key: string;
+        email: string;
+        amount: number;
+        currency?: string;
+        ref?: string;
+        callback: (response: { reference: string }) => void;
+        onClose: () => void;
+      }): { openIframe(): void };
+    };
+  }
+}
+
 export function Checkout() {
   const { items, subtotal, clear } = useCart();
   const { profile } = useAuth();
   const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);
   const [email, setEmail] = useState("");
+
+  const paystackKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY ?? "";
 
   if (items.length === 0) {
     return (
@@ -25,28 +43,39 @@ export function Checkout() {
     );
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  function handlePayWithPaystack() {
+    if (!email) return;
     setProcessing(true);
-    setTimeout(() => {
-      enrollInCourses(items);
-      clear();
-      setProcessing(false);
-      navigate("/dashboard?purchased=1");
-    }, 900);
+
+    const handler = window.PaystackPop.setup({
+      key: paystackKey,
+      email,
+      amount: Math.round(subtotal * 100),
+      currency: "NGN",
+      callback() {
+        enrollInCourses(items);
+        clear();
+        setProcessing(false);
+        navigate("/dashboard?purchased=1");
+      },
+      onClose() {
+        setProcessing(false);
+      },
+    });
+
+    handler.openIframe();
   }
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
       <h1 className="font-display text-2xl font-bold text-ink sm:text-3xl">Checkout</h1>
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
-        <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-cool-100 p-6">
+        <div className="space-y-6 rounded-2xl border border-cool-100 p-6">
           <div>
             <h2 className="font-display font-semibold text-ink">Contact</h2>
             <input
               type="email"
               required
-              defaultValue={profile ? "" : undefined}
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -55,48 +84,24 @@ export function Checkout() {
           </div>
 
           <div>
-            <h2 className="font-display font-semibold text-ink">Payment details</h2>
+            <h2 className="font-display font-semibold text-ink">Payment</h2>
             <p className="mt-1 text-xs text-cool-500">
-              This is a demo checkout — no real charge is made. Connect Stripe or your preferred processor here.
+              You will be redirected to a secure Paystack checkout to complete your payment. We accept all major cards — Visa, Mastercard, and Verve.
             </p>
-            <div className="mt-3 grid gap-3">
-              <input
-                placeholder="Card number"
-                required
-                pattern="[0-9 ]{12,19}"
-                className="w-full rounded-xl border border-cool-100 px-4 py-3 text-sm outline-none focus:border-mint-500"
-              />
-              <div className="grid grid-cols-2 gap-3">
-                <input
-                  placeholder="MM / YY"
-                  required
-                  className="w-full rounded-xl border border-cool-100 px-4 py-3 text-sm outline-none focus:border-mint-500"
-                />
-                <input
-                  placeholder="CVC"
-                  required
-                  className="w-full rounded-xl border border-cool-100 px-4 py-3 text-sm outline-none focus:border-mint-500"
-                />
-              </div>
-              <input
-                placeholder="Name on card"
-                required
-                className="w-full rounded-xl border border-cool-100 px-4 py-3 text-sm outline-none focus:border-mint-500"
-              />
-            </div>
           </div>
 
           <button
-            type="submit"
-            disabled={processing}
+            type="button"
+            disabled={processing || !email || !paystackKey}
+            onClick={handlePayWithPaystack}
             className="flex w-full items-center justify-center gap-2 rounded-full bg-mint-500 py-3 text-sm font-semibold text-ink transition hover:bg-mint-600 disabled:opacity-60"
           >
-            <Lock size={15} /> {processing ? "Processing…" : `Pay ${formatPrice(subtotal)}`}
+            <Lock size={15} /> {processing ? "Opening Paystack…" : `Pay ${formatPrice(subtotal)} with Paystack`}
           </button>
           <p className="flex items-center justify-center gap-1.5 text-xs text-cool-400">
-            <ShieldCheck size={13} /> Secured checkout · 30-day money-back guarantee
+            <ShieldCheck size={13} /> Secured by Paystack · 30-day money-back guarantee
           </p>
-        </form>
+        </div>
 
         <div className="rounded-2xl border border-cool-100 p-6 lg:sticky lg:top-24 lg:self-start">
           <h2 className="font-display font-semibold text-ink">Order summary</h2>
