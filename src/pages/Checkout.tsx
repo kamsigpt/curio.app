@@ -5,31 +5,13 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { formatPrice } from "@/lib/utils";
 import { enrollInCourses } from "@/lib/enrollment";
-
-declare global {
-  interface Window {
-    PaystackPop: {
-      setup(config: {
-        key: string;
-        email: string;
-        amount: number;
-        currency?: string;
-        ref?: string;
-        callback: (response: { reference: string }) => void;
-        onClose: () => void;
-      }): { openIframe(): void };
-    };
-  }
-}
+import { openPaystackPopup } from "@/lib/paystack";
 
 export function Checkout() {
   const { items, subtotal, clear } = useCart();
-  const { profile } = useAuth();
   const navigate = useNavigate();
   const [processing, setProcessing] = useState(false);
   const [email, setEmail] = useState("");
-
-  const paystackKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY ?? "";
 
   if (items.length === 0) {
     return (
@@ -43,16 +25,14 @@ export function Checkout() {
     );
   }
 
-  function handlePayWithPaystack() {
+  function handlePay() {
     if (!email) return;
     setProcessing(true);
 
-    const handler = window.PaystackPop.setup({
-      key: paystackKey,
+    openPaystackPopup({
       email,
-      amount: Math.round(subtotal * 100),
-      currency: "NGN",
-      callback() {
+      amount: subtotal,
+      onSuccess() {
         enrollInCourses(items);
         clear();
         setProcessing(false);
@@ -62,8 +42,6 @@ export function Checkout() {
         setProcessing(false);
       },
     });
-
-    handler.openIframe();
   }
 
   return (
@@ -92,8 +70,8 @@ export function Checkout() {
 
           <button
             type="button"
-            disabled={processing || !email || !paystackKey}
-            onClick={handlePayWithPaystack}
+            disabled={processing || !email}
+            onClick={handlePay}
             className="flex w-full items-center justify-center gap-2 rounded-full bg-mint-500 py-3 text-sm font-semibold text-ink transition hover:bg-mint-600 disabled:opacity-60"
           >
             <Lock size={15} /> {processing ? "Opening Paystack…" : `Pay ${formatPrice(subtotal)} with Paystack`}

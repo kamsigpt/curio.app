@@ -4,16 +4,17 @@ import { Reveal } from "@/components/ui/Reveal";
 import { CheckCircle2, BookOpen, DollarSign, ArrowRight, Search, PlusCircle, TrendingUp, User, ExternalLink, BarChart3, Eye, Star } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useCourses } from "@/context/CourseContext";
-import { fetchEnrolledCourses } from "@/lib/enrollment";
+import { fetchEnrolledCourses, boostCourses, isBoosted, getBoostedUntil } from "@/lib/enrollment";
 import type { EnrolledCourse } from "@/lib/types";
 import { CourseThumb } from "@/components/ui/CourseThumb";
 import { formatPrice } from "@/lib/utils";
 
 export function Dashboard() {
-  const { profile, loading } = useAuth();
+  const { profile, loading, userEmail } = useAuth();
   const { courses } = useCourses();
   const [params, setParams] = useSearchParams();
   const [enrolled, setEnrolled] = useState<EnrolledCourse[]>([]);
+  const [boosting, setBoosting] = useState(false);
   const justPurchased = params.get("purchased") === "1";
 
   useEffect(() => {
@@ -178,10 +179,14 @@ export function Dashboard() {
           </div>
           <div className="mt-4 rounded-xl border border-dashed border-mint-200 bg-white/60 p-4 text-center">
             <p className="text-sm text-cool-500">
-              Want more eyes on your course?{" "}
-              <Link to="/publish" className="font-semibold text-[#10CDB2] hover:text-[#0BA391]">
-                Boost it for $10
-              </Link>
+              Want more eyes on your courses?{" "}
+              <button
+                disabled={boosting}
+                onClick={() => boostCourses(userEmail || profile?.full_name + "@curio.app", setBoosting)}
+                className="font-semibold text-[#10CDB2] hover:text-[#0BA391] disabled:opacity-50"
+              >
+                {boosting ? "Opening Paystack…" : isBoosted(getBoostedUntil()) ? "Boost active — extend for $10" : "Boost all courses for $10"}
+              </button>
             </p>
           </div>
         </Reveal>

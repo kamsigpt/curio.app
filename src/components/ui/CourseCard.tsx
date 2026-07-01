@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Clock, ShoppingCart, Check } from "lucide-react";
+import { Clock, ShoppingCart, Check, Star } from "lucide-react";
 import type { Course } from "@/lib/types";
 import { formatPrice } from "@/lib/utils";
 import { Rating } from "./Rating";
@@ -7,18 +7,29 @@ import { Badge } from "./Badge";
 import { CourseThumb } from "./CourseThumb";
 import { useCart } from "@/context/CartContext";
 
+function isBoosted(boosted_until?: string | null): boolean {
+  if (!boosted_until) return false;
+  return new Date(boosted_until).getTime() > Date.now();
+}
+
 export function CourseCard({ course }: { course: Course }) {
   const { addItem, isInCart } = useCart();
   const inCart = isInCart(course.id);
+  const featured = isBoosted(course.boosted_until);
 
   return (
     <div className="glass-panel group flex flex-col overflow-hidden rounded-2xl transition-all hover:-translate-y-1 hover:shadow-cardHover">
-      <Link to={`/course/${course.slug}`} className="block">
+      <Link to={`/course/${course.slug}`} className="relative block">
+        {featured && (
+          <div className="absolute left-3 top-3 z-10 flex items-center gap-1 rounded-full bg-green-500 px-2.5 py-1 text-xs font-bold text-white shadow-md">
+            <Star size={12} className="fill-white" /> Featured
+          </div>
+        )}
         <CourseThumb seed={course.id} categoryIcon={course.category.icon} className="h-28 w-full" />
       </Link>
       <div className="flex flex-1 flex-col gap-1.5 p-3">
         <div className="flex items-center gap-2">
-          <Badge tone="outline">Udemy</Badge>
+          <Badge tone="outline">{course.provider}</Badge>
           {course.bestseller && <Badge tone="mint">Bestseller</Badge>}
           {course.is_new && <Badge tone="amber">New</Badge>}
         </div>

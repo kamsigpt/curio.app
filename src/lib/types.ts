@@ -63,6 +63,7 @@ export interface Course {
   duration_hours: number;
   lecture_count: number;
   last_updated: string;
+  boosted_until?: string | null;
   bestseller?: boolean;
   is_new?: boolean;
   tags: string[];

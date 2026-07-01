@@ -93,6 +93,7 @@ create table if not exists public.courses (
   lecture_count int not null default 0,
   bestseller boolean not null default false,
   is_new boolean not null default false,
+  boosted_until timestamptz,
   tags text[] not null default '{}',
   what_you_will_learn text[] not null default '{}',
   requirements text[] not null default '{}',

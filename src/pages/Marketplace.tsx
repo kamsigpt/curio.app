@@ -1,16 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
 import { useCourses } from "@/context/CourseContext";
-import { useAuth } from "@/context/AuthContext";
 import { CourseCard } from "@/components/ui/CourseCard";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+
+function isBoosted(boosted_until?: string | null): boolean {
+  if (!boosted_until) return false;
+  return new Date(boosted_until).getTime() > Date.now();
+}
 
 export function Marketplace() {
   const { courses } = useCourses();
-  const { session } = useAuth();
   const [params, setParams] = useSearchParams();
-  const [enrolledIds, setEnrolledIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (!params.has("price")) {
@@ -19,17 +20,6 @@ export function Marketplace() {
       setParams(next);
     }
   }, []);
-
-  useEffect(() => {
-    if (!isSupabaseConfigured || !session?.user?.id) return;
-    void supabase
-      .from("enrollments")
-      .select("course_id")
-      .eq("user_id", session.user.id)
-      .then(({ data }) => {
-        if (data) setEnrolledIds(data.map((r) => r.course_id));
-      });
-  }, [session?.user?.id]);
 
   const query = params.get("q") ?? "";
   const sort = params.get("sort") ?? "relevance";
@@ -64,16 +54,14 @@ export function Marketplace() {
     if (sort === "price-high") result.sort((a, b) => b.price - a.price);
     if (sort === "rating") result.sort((a, b) => b.rating - a.rating);
 
-    if (enrolledIds.length > 0) {
-      result.sort((a, b) => {
-        const aEnrolled = enrolledIds.includes(a.id) ? 0 : 1;
-        const bEnrolled = enrolledIds.includes(b.id) ? 0 : 1;
-        return aEnrolled - bEnrolled;
-      });
-    }
+    result.sort((a, b) => {
+      const aBoosted = isBoosted(a.boosted_until) ? 0 : 1;
+      const bBoosted = isBoosted(b.boosted_until) ? 0 : 1;
+      return aBoosted - bBoosted;
+    });
 
     return result;
-  }, [query, priceFilter, sort, enrolledIds]);
+  }, [query, priceFilter, sort]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

@@ -1,5 +1,63 @@
 import type { Course, EnrolledCourse } from "./types";
 import { supabase, isSupabaseConfigured } from "./supabase";
+import { openPaystackPopup } from "./paystack";
+
+const BOOST_KEY = "curio_boosted_courses_v1";
+
+export function boostCourses(email: string, onProcessing: (v: boolean) => void) {
+  onProcessing(true);
+  openPaystackPopup({
+    email,
+    amount: 10,
+    onSuccess() {
+      void applyBoost();
+      onProcessing(false);
+    },
+    onClose() {
+      onProcessing(false);
+    },
+  });
+}
+
+async function applyBoost() {
+  if (isSupabaseConfigured) {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const userId = sessionData.session?.user.id;
+    if (!userId) return;
+
+    const { data: instructor } = await supabase
+      .from("instructors")
+      .select("id")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (instructor) {
+      const now = new Date();
+      const until = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString();
+      await supabase
+        .from("courses")
+        .update({ boosted_until: until })
+        .eq("instructor_id", instructor.id);
+    }
+    return;
+  }
+
+  const boosted = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+  localStorage.setItem(BOOST_KEY, boosted);
+}
+
+export function getBoostedUntil(): string | null {
+  try {
+    return localStorage.getItem(BOOST_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function isBoosted(boosted_until?: string | null): boolean {
+  if (!boosted_until) return false;
+  return new Date(boosted_until).getTime() > Date.now();
+}
 
 const STORAGE_KEY = "curio_enrollments_v1";
 
