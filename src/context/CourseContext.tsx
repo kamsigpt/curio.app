@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { Course } from "@/lib/types";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { courses as mockCourses } from "@/data/mockData";
 
 interface CourseContextValue {
@@ -49,9 +49,9 @@ export function CourseProvider({ children }: { children: ReactNode }) {
     fetchCourses().then(setSupabaseCourses);
   }, []);
 
-  const courses = supabaseCourses && supabaseCourses.length > 0
-    ? [...supabaseCourses, ...submitted]
-    : [...mockCourses, ...submitted];
+  const showMock = !isSupabaseConfigured;
+  const displayCourses = showMock ? mockCourses : supabaseCourses ?? [];
+  const courses = [...displayCourses, ...submitted];
 
   function addCourse(course: Course) {
     setSubmitted((prev) => [...prev, course]);
