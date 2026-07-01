@@ -91,6 +91,7 @@ export interface EnrolledCourse {
   progress_percent: number;
   enrolled_at: string;
   last_accessed?: string;
+  is_featured?: boolean;
 }
 
 export type AdminPermission =

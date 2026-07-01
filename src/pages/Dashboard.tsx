@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Reveal } from "@/components/ui/Reveal";
-import { CheckCircle2, BookOpen, DollarSign, ArrowRight, Search, PlusCircle, TrendingUp, User, ExternalLink, BarChart3, Eye } from "lucide-react";
+import { CheckCircle2, BookOpen, DollarSign, ArrowRight, Search, PlusCircle, TrendingUp, User, ExternalLink, BarChart3, Eye, Star } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useCourses } from "@/context/CourseContext";
-import { getLocalEnrolledCourses } from "@/lib/enrollment";
+import { fetchEnrolledCourses } from "@/lib/enrollment";
 import type { EnrolledCourse } from "@/lib/types";
 import { CourseThumb } from "@/components/ui/CourseThumb";
 import { formatPrice } from "@/lib/utils";
@@ -17,7 +17,7 @@ export function Dashboard() {
   const justPurchased = params.get("purchased") === "1";
 
   useEffect(() => {
-    setEnrolled(getLocalEnrolledCourses());
+    void fetchEnrolledCourses().then(setEnrolled);
     if (justPurchased) {
       const next = new URLSearchParams(params);
       next.delete("purchased");
@@ -205,12 +205,17 @@ export function Dashboard() {
         <Reveal variant="slideRight" duration={600} delay={80} className="mt-8">
           <h2 className="mb-4 font-display text-lg font-semibold text-ink">My Learning</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {enrolled.map(({ course }) => (
+            {enrolled.map(({ course, is_featured }) => (
               <Link
                 key={course.id}
                 to={`/course/${course.slug}`}
-                className="overflow-hidden rounded-2xl border border-cool-100 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                className="group relative overflow-hidden rounded-2xl border border-cool-100 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
+                {is_featured && (
+                  <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full bg-amber-400 px-2.5 py-1 text-xs font-bold text-ink shadow-md">
+                    <Star size={12} className="fill-ink" /> Featured
+                  </div>
+                )}
                 <CourseThumb seed={course.id} categoryIcon={course.category.icon} className="h-32 w-full" />
                 <div className="p-4">
                   <p className="text-xs text-cool-400">{course.provider}</p>

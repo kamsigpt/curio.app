@@ -151,6 +151,7 @@ create table if not exists public.enrollments (
   progress_percent int not null default 0 check (progress_percent between 0 and 100),
   enrolled_at timestamptz not null default now(),
   last_accessed timestamptz,
+  is_featured boolean not null default false,
   unique (user_id, course_id)
 );
 
