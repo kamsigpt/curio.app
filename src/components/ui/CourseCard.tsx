@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Clock, ShoppingCart, Check, Star } from "lucide-react";
+import { Clock, ShoppingCart, Check, Star, ExternalLink } from "lucide-react";
 import type { Course } from "@/lib/types";
 import { formatPrice } from "@/lib/utils";
 import { Rating } from "./Rating";
@@ -49,18 +49,29 @@ export function CourseCard({ course }: { course: Course }) {
         </div>
         <div className="mt-auto flex items-center justify-between pt-2">
           <span className="font-display text-lg font-bold text-green-600">Free</span>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              if (!inCart) addItem(course);
-            }}
-            aria-label={inCart ? "Already in cart" : "Add to cart"}
-            className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors ${
-              inCart ? "bg-mint-100 text-mint-700" : "bg-ink text-white hover:bg-mint-600"
-            }`}
-          >
-            {inCart ? <Check size={16} /> : <ShoppingCart size={16} />}
-          </button>
+          {course.external_url ? (
+            <a
+              href={course.external_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-9 items-center gap-1.5 rounded-full bg-ink px-3.5 text-xs font-semibold text-white transition hover:bg-mint-600"
+            >
+              Open <ExternalLink size={13} />
+            </a>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                if (!inCart) addItem(course);
+              }}
+              aria-label={inCart ? "Already in cart" : "Add to cart"}
+              className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors ${
+                inCart ? "bg-mint-100 text-mint-700" : "bg-ink text-white hover:bg-mint-600"
+              }`}
+            >
+              {inCart ? <Check size={16} /> : <ShoppingCart size={16} />}
+            </button>
+          )}
         </div>
       </div>
     </div>

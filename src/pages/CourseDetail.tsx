@@ -10,6 +10,7 @@ import {
   ShoppingCart,
   PlayCircle,
   Users,
+  ExternalLink,
 } from "lucide-react";
 import { getCourseBySlug, getRelatedCourses } from "@/data/mockData";
 import { formatPrice, totalLessons } from "@/lib/utils";
@@ -246,29 +247,42 @@ function PurchaseCard({
             </p>
           )}
 
-          <button
-            onClick={onBuyNow}
-            className="mt-4 w-full rounded-full bg-mint-500 py-3 text-sm font-semibold text-ink transition hover:bg-mint-600"
-          >
-            Buy now
-          </button>
-          <button
-            onClick={onAddToCart}
-            disabled={inCart}
-            className="mt-2.5 flex w-full items-center justify-center gap-2 rounded-full border border-ink py-3 text-sm font-semibold text-ink transition hover:bg-cool-50 disabled:border-mint-300 disabled:text-mint-700"
-          >
-            {inCart ? (
-              <>
-                <Check size={16} /> In your cart
-              </>
-            ) : (
-              <>
-                <ShoppingCart size={16} /> Add to cart
-              </>
-            )}
-          </button>
+          {course.external_url ? (
+            <a
+              href={course.external_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-mint-500 py-3 text-sm font-semibold text-ink transition hover:bg-mint-600"
+            >
+              Open course <ExternalLink size={16} />
+            </a>
+          ) : (
+            <>
+              <button
+                onClick={onBuyNow}
+                className="mt-4 w-full rounded-full bg-mint-500 py-3 text-sm font-semibold text-ink transition hover:bg-mint-600"
+              >
+                Buy now
+              </button>
+              <button
+                onClick={onAddToCart}
+                disabled={inCart}
+                className="mt-2.5 flex w-full items-center justify-center gap-2 rounded-full border border-ink py-3 text-sm font-semibold text-ink transition hover:bg-cool-50 disabled:border-mint-300 disabled:text-mint-700"
+              >
+                {inCart ? (
+                  <>
+                    <Check size={16} /> In your cart
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart size={16} /> Add to cart
+                  </>
+                )}
+              </button>
+            </>
+          )}
 
-          <p className="mt-4 text-center text-xs text-cool-400">30-day money-back guarantee</p>
+          {!course.external_url && <p className="mt-4 text-center text-xs text-cool-400">30-day money-back guarantee</p>}
 
           <div className="mt-5 space-y-2 border-t border-cool-100 pt-4 text-sm text-cool-600">
             <p>This course includes:</p>
