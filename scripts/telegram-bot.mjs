@@ -4,7 +4,6 @@ const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? "";
 const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY ?? "";
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN ?? "";
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID ?? "";
-const PROCESSED_KEY = "curio_telegram_processed_v1";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -16,14 +15,14 @@ async function getTelegramUpdates() {
   return json.result ?? [];
 }
 
-async function fetchOgTags(url: string) {
+async function fetchOgTags(url) {
   try {
     const res = await fetch(url, {
       headers: { "User-Agent": "Mozilla/5.0 (compatible; CurioBot/1.0)" },
       signal: AbortSignal.timeout(10000),
     });
     const html = await res.text();
-    const og: Record<string, string> = {};
+    const og = {};
     const metaRegex = /<meta\s+(?:property|name)=["'](og:|twitter:)?([^"']+)["']\s+content=["']([^"']+)["']/gi;
     let match;
     while ((match = metaRegex.exec(html)) !== null) {
@@ -37,12 +36,12 @@ async function fetchOgTags(url: string) {
   }
 }
 
-function extractUrls(text: string): string[] {
+function extractUrls(text) {
   const urlRegex = /https?:\/\/[^\s,]+/g;
   return text.match(urlRegex) ?? [];
 }
 
-function slugify(text: string): string {
+function slugify(text) {
   return text
     .toLowerCase()
     .replace(/[^\w\s-]/g, "")
@@ -51,7 +50,7 @@ function slugify(text: string): string {
     .slice(0, 100);
 }
 
-function detectCategory(text: string, og: Record<string, string>): string {
+function detectCategory(text, og) {
   const combined = `${text} ${og.title ?? ""} ${og.description ?? ""}`.toLowerCase();
   if (/\b(design|figma|ui|ux|graphic|illustrat|photoshop|adobe|canva)\b/.test(combined)) return "design";
   if (/\b(develop|program|code|python|javascript|react|node|web|app|software|data|ai|machine)\b/.test(combined)) return "development";
@@ -63,7 +62,7 @@ function detectCategory(text: string, og: Record<string, string>): string {
   return "other";
 }
 
-async function ensureCategory(slug: string, name: string) {
+async function ensureCategory(slug, name) {
   const { data } = await supabase.from("categories").select("id").eq("slug", slug).maybeSingle();
   if (data) return data.id;
   const { data: inserted } = await supabase
@@ -91,26 +90,26 @@ async function ensureInstructor() {
   return inserted?.id;
 }
 
-function parseDuration(text: string): number {
+function parseDuration(text) {
   const match = text.match(/(\d+)\s*(hour|hr|h)/i);
   return match ? Number.parseInt(match[1]) : 1;
 }
 
-async function sleep(ms: number) {
+async function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
 export async function run() {
   if (!BOT_TOKEN || !CHAT_ID) {
-    console.log("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set — skipping");
+    console.log("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set - skipping");
     return;
   }
 
   const updates = await getTelegramUpdates();
   const messages = updates
-    .filter((u: any) => u.message?.chat?.id?.toString() === CHAT_ID)
-    .map((u: any) => ({ id: u.message.message_id, text: u.message.text ?? u.message.caption ?? "" }))
-    .filter((m: any) => m.text);
+    .filter((u) => u.message?.chat?.id?.toString() === CHAT_ID)
+    .map((u) => ({ id: u.message.message_id, text: u.message.text ?? u.message.caption ?? "" }))
+    .filter((m) => m.text);
 
   const { data: existingCourses } = await supabase.from("courses").select("slug");
   const existingSlugs = new Set(existingCourses?.map((c) => c.slug) ?? []);
@@ -132,8 +131,9 @@ export async function run() {
       const slug = slugify(title);
       if (!slug || existingSlugs.has(slug)) continue;
 
-      const catId = detectCategory(msg.text, og) !== "other"
-        ? await ensureCategory(detectCategory(msg.text, og), detectCategory(msg.text, og))
+      const catSlug = detectCategory(msg.text, og);
+      const catId = catSlug !== "other"
+        ? await ensureCategory(catSlug, catSlug.charAt(0).toUpperCase() + catSlug.slice(1))
         : categoryId;
 
       const course = {
@@ -157,7 +157,7 @@ export async function run() {
         lecture_count: 0,
         bestseller: false,
         is_new: true,
-        tags: `{free,telegram,${detectCategory(msg.text, og)}}`,
+        tags: `{free,telegram,${catSlug}}`,
         what_you_will_learn: "{}",
         requirements: "{}",
         curriculum: "[]",
