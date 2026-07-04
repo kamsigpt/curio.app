@@ -80,6 +80,7 @@ create table if not exists public.courses (
   description text,
   thumbnail_url text,
   provider text not null default 'Curio Original',
+  external_url text,
   instructor_id uuid references public.instructors(id) on delete set null,
   category_id uuid references public.categories(id) on delete set null,
   level text not null default 'All Levels' check (level in ('Beginner', 'Intermediate', 'Advanced', 'All Levels')),
