@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? "";
-const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY ?? "";
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY ?? process.env.VITE_SUPABASE_ANON_KEY ?? "";
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN ?? "";
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID ?? "";
 
@@ -108,6 +108,10 @@ export async function run() {
   console.log(`Fetching Telegram updates for chat ${CHAT_ID}...`);
   const updates = await getTelegramUpdates();
   console.log(`Got ${updates.length} total updates`);
+
+  const chatIds = [...new Set(updates.map((u) => u.message?.chat?.id?.toString()).filter(Boolean))];
+  console.log(`Chats found in updates: ${JSON.stringify(chatIds)}`);
+  console.log(`Your TELEGRAM_CHAT_ID secret: ${CHAT_ID}`);
 
   const messages = updates
     .filter((u) => u.message?.chat?.id?.toString() === CHAT_ID)
