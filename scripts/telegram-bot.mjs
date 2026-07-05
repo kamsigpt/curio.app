@@ -105,17 +105,24 @@ export async function run() {
     return;
   }
 
+  console.log(`Fetching Telegram updates for chat ${CHAT_ID}...`);
   const updates = await getTelegramUpdates();
+  console.log(`Got ${updates.length} total updates`);
+
   const messages = updates
     .filter((u) => u.message?.chat?.id?.toString() === CHAT_ID)
     .map((u) => ({ id: u.message.message_id, text: u.message.text ?? u.message.caption ?? "" }))
     .filter((m) => m.text);
 
+  console.log(`Found ${messages.length} text messages from chat ${CHAT_ID}`);
+
   const { data: existingCourses } = await supabase.from("courses").select("slug");
   const existingSlugs = new Set(existingCourses?.map((c) => c.slug) ?? []);
+  console.log(`Existing courses in DB: ${existingSlugs.size}`);
 
   const categoryId = await ensureCategory("other", "Other");
   const instructorId = await ensureInstructor();
+  console.log(`Using category: ${categoryId}, instructor: ${instructorId}`);
 
   let inserted = 0;
 
