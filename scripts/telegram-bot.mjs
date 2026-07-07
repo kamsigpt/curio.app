@@ -109,16 +109,31 @@ export async function run() {
   const updates = await getTelegramUpdates();
   console.log(`Got ${updates.length} total updates`);
 
+  if (updates.length > 0) {
+    const first = updates[0];
+    console.log("First update raw (chat info):", JSON.stringify({
+      update_id: first.update_id,
+      chat_id: first.message?.chat?.id,
+      chat_type: first.message?.chat?.type,
+      chat_title: first.message?.chat?.title,
+      message_id: first.message?.message_id,
+      text_preview: (first.message?.text ?? first.message?.caption ?? "").slice(0, 100),
+    }));
+  }
+
   const chatIds = [...new Set(updates.map((u) => u.message?.chat?.id?.toString()).filter(Boolean))];
   console.log(`Chats found in updates: ${JSON.stringify(chatIds)}`);
   console.log(`Your TELEGRAM_CHAT_ID secret: ${CHAT_ID}`);
 
-  const messages = updates
-    .filter((u) => u.message?.chat?.id?.toString() === CHAT_ID)
-    .map((u) => ({ id: u.message.message_id, text: u.message.text ?? u.message.caption ?? "" }))
+  let messages = updates
+    .map((u) => ({ id: u.message.message_id, text: u.message.text ?? u.message.caption ?? "", chat_id: u.message?.chat?.id }))
     .filter((m) => m.text);
 
-  console.log(`Found ${messages.length} text messages from chat ${CHAT_ID}`);
+  if (CHAT_ID) {
+    messages = messages.filter((m) => m.chat_id?.toString() === CHAT_ID);
+  }
+
+  console.log(`Found ${messages.length} text messages from ${CHAT_ID ? `chat ${CHAT_ID}` : "any group"}`);
 
   const { data: existingCourses } = await supabase.from("courses").select("slug");
   const existingSlugs = new Set(existingCourses?.map((c) => c.slug) ?? []);
