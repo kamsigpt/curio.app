@@ -10,7 +10,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 async function getTelegramUpdates() {
   const url = new URL(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates`);
   url.searchParams.set("limit", "50");
-  url.searchParams.set("allowed_updates", JSON.stringify(["message"]));
+  url.searchParams.set("allowed_updates", JSON.stringify(["message", "channel_post"]));
   const res = await fetch(url.toString());
   const json = await res.json();
   if (!json.ok) throw new Error(`Telegram API error: ${JSON.stringify(json)}`);
@@ -115,27 +115,22 @@ export async function run() {
   const updates = await getTelegramUpdates();
   console.log(`Got ${updates.length} total updates`);
 
-  const messageUpdates = updates.filter((u) => u.message);
-  console.log(`${updates.length} total updates, ${messageUpdates.length} are messages`);
+  console.log(`${updates.length} total updates`);
 
-  if (messageUpdates.length > 0) {
-    const first = messageUpdates[0];
-    console.log("First message raw:", JSON.stringify({
-      update_id: first.update_id,
-      chat_id: first.message?.chat?.id,
-      chat_type: first.message?.chat?.type,
-      chat_title: first.message?.chat?.title,
-      message_id: first.message?.message_id,
-      text_preview: (first.message?.text ?? first.message?.caption ?? "").slice(0, 100),
-    }));
+  for (const u of updates.slice(0, 5)) {
+    const type = u.message ? "message" : u.channel_post ? "channel_post" : u.my_chat_member ? "my_chat_member" : "other";
+    const chat = u.message?.chat ?? u.channel_post?.chat ?? u.my_chat_member?.chat ?? {};
+    console.log(`  [${type}] chat_id=${chat.id} chat_type=${chat.type} title="${chat.title ?? ""}"`);
   }
 
-  const chatIds = [...new Set(messageUpdates.map((u) => u.message?.chat?.id?.toString()).filter(Boolean))];
-  console.log(`Chats with messages: ${JSON.stringify(chatIds)}`);
-  console.log(`Your TELEGRAM_CHAT_ID secret: ${CHAT_ID}`);
+  const messageUpdates = updates.filter((u) => u.message || u.channel_post);
+  console.log(`Messages + channel posts: ${messageUpdates.length}`);
 
   let messages = messageUpdates
-    .map((u) => ({ id: u.message.message_id, text: u.message.text ?? u.message.caption ?? "", chat_id: u.message?.chat?.id }))
+    .map((u) => {
+      const m = u.message ?? u.channel_post;
+      return { id: m.message_id, text: m.text ?? m.caption ?? "", chat_id: m.chat?.id };
+    })
     .filter((m) => m.text);
 
   if (CHAT_ID) {
