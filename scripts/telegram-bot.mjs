@@ -8,8 +8,10 @@ const CHAT_ID = process.env.TELEGRAM_CHAT_ID ?? "";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function getTelegramUpdates() {
-  const url = `https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?limit=50`;
-  const res = await fetch(url);
+  const url = new URL(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates`);
+  url.searchParams.set("limit", "50");
+  url.searchParams.set("allowed_updates", JSON.stringify(["message"]));
+  const res = await fetch(url.toString());
   const json = await res.json();
   if (!json.ok) throw new Error(`Telegram API error: ${JSON.stringify(json)}`);
   return json.result ?? [];
