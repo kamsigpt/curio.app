@@ -109,9 +109,12 @@ export async function run() {
   const updates = await getTelegramUpdates();
   console.log(`Got ${updates.length} total updates`);
 
-  if (updates.length > 0) {
-    const first = updates[0];
-    console.log("First update raw (chat info):", JSON.stringify({
+  const messageUpdates = updates.filter((u) => u.message);
+  console.log(`${updates.length} total updates, ${messageUpdates.length} are messages`);
+
+  if (messageUpdates.length > 0) {
+    const first = messageUpdates[0];
+    console.log("First message raw:", JSON.stringify({
       update_id: first.update_id,
       chat_id: first.message?.chat?.id,
       chat_type: first.message?.chat?.type,
@@ -121,11 +124,11 @@ export async function run() {
     }));
   }
 
-  const chatIds = [...new Set(updates.map((u) => u.message?.chat?.id?.toString()).filter(Boolean))];
-  console.log(`Chats found in updates: ${JSON.stringify(chatIds)}`);
+  const chatIds = [...new Set(messageUpdates.map((u) => u.message?.chat?.id?.toString()).filter(Boolean))];
+  console.log(`Chats with messages: ${JSON.stringify(chatIds)}`);
   console.log(`Your TELEGRAM_CHAT_ID secret: ${CHAT_ID}`);
 
-  let messages = updates
+  let messages = messageUpdates
     .map((u) => ({ id: u.message.message_id, text: u.message.text ?? u.message.caption ?? "", chat_id: u.message?.chat?.id }))
     .filter((m) => m.text);
 
