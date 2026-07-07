@@ -100,9 +100,13 @@ async function sleep(ms) {
 }
 
 export async function run() {
-  if (!BOT_TOKEN || !CHAT_ID) {
-    console.log("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set - skipping");
+  if (!BOT_TOKEN) {
+    console.log("TELEGRAM_BOT_TOKEN not set - skipping");
     return;
+  }
+
+  if (!CHAT_ID) {
+    console.log("TELEGRAM_CHAT_ID not set - will process messages from all chats");
   }
 
   console.log(`Fetching Telegram updates for chat ${CHAT_ID}...`);
