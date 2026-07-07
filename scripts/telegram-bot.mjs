@@ -139,6 +139,11 @@ export async function run() {
 
   console.log(`Found ${messages.length} text messages from ${CHAT_ID ? `chat ${CHAT_ID}` : "any group"}`);
 
+  if (messages.length > 0) {
+    console.log(`First message preview: "${messages[0].text.slice(0, 200)}"`);
+    console.log(`First message URLs: ${JSON.stringify(extractUrls(messages[0].text).slice(0, 3))}`);
+  }
+
   const { data: existingCourses } = await supabase.from("courses").select("slug");
   const existingSlugs = new Set(existingCourses?.map((c) => c.slug) ?? []);
   console.log(`Existing courses in DB: ${existingSlugs.size}`);
@@ -149,9 +154,10 @@ export async function run() {
 
   let inserted = 0;
 
+  let skippedNoUrls = 0;
   for (const msg of messages) {
     const urls = extractUrls(msg.text);
-    if (urls.length === 0) continue;
+    if (urls.length === 0) { skippedNoUrls++; continue; }
 
     for (const url of urls) {
       await sleep(500);
@@ -159,7 +165,8 @@ export async function run() {
       const og = await fetchOgTags(url);
       const title = og.title || og["og:title"] || url.split("/").pop()?.replace(/[-_]/g, " ") || "Untitled Course";
       const slug = slugify(title);
-      if (!slug || existingSlugs.has(slug)) continue;
+      console.log(`  title="${title}" slug="${slug}" og_keys=${Object.keys(og).join(",")}`);
+      if (!slug || existingSlugs.has(slug)) { console.log(`  -> skipped (slug conflict or empty)`); continue; }
 
       const catSlug = detectCategory(msg.text, og);
       const catId = catSlug !== "other"
@@ -204,5 +211,5 @@ export async function run() {
     }
   }
 
-  console.log(`Done. ${inserted} new courses added.`);
+  console.log(`Done. ${inserted} new courses added. (${skippedNoUrls} messages had no URLs)`);
 }
