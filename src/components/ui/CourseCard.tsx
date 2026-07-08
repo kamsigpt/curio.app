@@ -25,7 +25,7 @@ export function CourseCard({ course }: { course: Course }) {
   const visibleTags = course.tags.slice(0, 3);
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-white/70 bg-[#241f31] text-white shadow-[0_18px_48px_-26px_rgba(12,18,24,0.7)] transition-all hover:-translate-y-1 hover:shadow-cardHover">
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-cool-100 bg-white text-ink shadow-card transition-all hover:-translate-y-1 hover:border-[#10CDB2] hover:shadow-cardHover">
       <Link to={`/course/${course.slug}`} className="flex flex-1 flex-col">
         <div className="relative">
           {featured && (
@@ -47,46 +47,46 @@ export function CourseCard({ course }: { course: Course }) {
             {course.bestseller && <Badge tone="mint">Bestseller</Badge>}
             {course.is_new && <Badge tone="amber">New</Badge>}
           </div>
-          <h3 className="font-display text-lg font-bold leading-snug text-white line-clamp-2 hover:text-mint-200">
+          <h3 className="font-display text-lg font-bold leading-snug text-ink line-clamp-2 group-hover:text-[#10CDB2]">
             {course.title}
           </h3>
-          <p className="border-l-4 border-green-500 bg-white/8 py-2 pl-3 pr-2 text-sm font-semibold leading-snug text-white/90 line-clamp-2">
+          <p className="border-l-4 border-mint-600 bg-cool-50 py-2 pl-3 pr-2 text-sm font-semibold leading-snug text-cool-700 line-clamp-2">
             {course.subtitle || course.description}
           </p>
-          <div className="flex items-center gap-2 pt-4 text-sm font-semibold italic text-white/90">
+          <div className="flex items-center gap-2 pt-4 text-sm font-semibold italic text-cool-500">
             {course.duration_hours > 0 && <span>{course.duration_hours} hours</span>}
             {course.duration_hours > 0 && course.lecture_count > 0 && <span aria-hidden="true">•</span>}
             {course.lecture_count > 0 && <span>{course.lecture_count} lectures</span>}
             {course.duration_hours <= 0 && course.lecture_count <= 0 && <span>{course.level}</span>}
           </div>
-          <div className="space-y-1 text-sm text-white/90">
+          <div className="space-y-1 text-sm text-cool-500">
             {course.rating > 0 && (
               <p className="flex items-center gap-2">
-                <Star size={16} className="fill-yellow-300 text-yellow-300" />
+                <Star size={16} className="fill-yellow-400 text-yellow-400" />
                 <span>
-                  <strong>Rating:</strong> {course.rating.toFixed(1)}
+                  <strong className="text-ink">Rating:</strong> {course.rating.toFixed(1)}
                   {course.rating_count > 0 ? ` (${course.rating_count.toLocaleString()} reviews)` : ""}
                 </span>
               </p>
             )}
             {lastUpdated && (
               <p className="flex items-center gap-2">
-                <CalendarDays size={16} className="text-mint-200" />
+                <CalendarDays size={16} className="text-[#10CDB2]" />
                 <span>
-                  <strong>Last updated:</strong> {lastUpdated}
+                  <strong className="text-ink">Last updated:</strong> {lastUpdated}
                 </span>
               </p>
             )}
             <p className="flex items-start gap-2">
-              <GraduationCap size={17} className="mt-0.5 text-mint-200" />
+              <GraduationCap size={17} className="mt-0.5 text-[#10CDB2]" />
               <span>
-                <strong>Instructor:</strong>{" "}
-                <span className="font-semibold text-[#5fa8ff]">{course.instructor.name}</span>
+                <strong className="text-ink">Instructor:</strong>{" "}
+                <span className="font-semibold text-mint-700">{course.instructor.name}</span>
               </span>
             </p>
           </div>
           {visibleTags.length > 0 && (
-            <div className="flex flex-wrap gap-x-2 gap-y-1 pt-2 text-sm font-bold text-[#5fa8ff]">
+            <div className="flex flex-wrap gap-x-2 gap-y-1 pt-2 text-sm font-bold text-mint-700">
               {visibleTags.map((tag) => (
                 <span key={tag}>#{tag.replace(/^#/, "").replace(/\s+/g, "_")}</span>
               ))}
@@ -101,7 +101,7 @@ export function CourseCard({ course }: { course: Course }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-white/10 px-4 text-sm font-extrabold text-white transition hover:bg-mint-500 hover:text-ink"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#10CDB2] px-4 text-sm font-extrabold text-white transition hover:bg-mint-700"
           >
             Enroll Now <ExternalLink size={16} />
           </a>
@@ -113,7 +113,7 @@ export function CourseCard({ course }: { course: Course }) {
             }}
             aria-label={inCart ? "Already in cart" : "Add to cart"}
             className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-extrabold transition-colors ${
-              inCart ? "bg-mint-100 text-mint-700" : "bg-white/10 text-white hover:bg-mint-500 hover:text-ink"
+              inCart ? "bg-mint-100 text-mint-700" : "bg-[#10CDB2] text-white hover:bg-mint-700"
             }`}
           >
             {inCart ? <Check size={16} /> : <ShoppingCart size={16} />}

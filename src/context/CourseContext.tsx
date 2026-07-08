@@ -49,7 +49,9 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const displayCourses = supabaseCourses ?? [];
-  const courses = [...displayCourses, ...submitted];
+  const courses = [...displayCourses, ...submitted].filter(
+    (c) => !c.tags?.some((t) => t.toLowerCase() === "telegram")
+  );
 
   function addCourse(course: Course) {
     setSubmitted((prev) => [...prev, course]);
