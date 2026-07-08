@@ -13,17 +13,9 @@ export function Marketplace() {
   const { courses, loading } = useCourses();
   const [params, setParams] = useSearchParams();
 
-  useEffect(() => {
-    if (!params.has("price")) {
-      const next = new URLSearchParams(params);
-      next.set("price", "free");
-      setParams(next);
-    }
-  }, []);
-
   const query = params.get("q") ?? "";
   const sort = params.get("sort") ?? "relevance";
-  const priceFilter = params.get("price") ?? "free";
+  const priceFilter = params.get("price") ?? "all";
 
   function updateParam(key: string, value: string | null) {
     const next = new URLSearchParams(params);
@@ -68,26 +60,19 @@ export function Marketplace() {
 
       <div className="mb-8 flex justify-center">
         <div className="inline-flex rounded-full bg-white/60 p-1 shadow-[inset_0_1px_2px_rgba(0,0,0,0.06),0_4px_20px_-8px_rgba(16,205,178,0.3)] backdrop-blur-xl">
-          <button
-            onClick={() => updateParam("price", priceFilter === "free" ? null : "free")}
-            className={`rounded-full px-6 py-2 text-sm font-semibold transition-all duration-300 ${
-              priceFilter === "free"
-                ? "bg-[#10CDB2] text-white shadow-[0_2px_12px_-4px_rgba(16,205,178,0.5)]"
-                : "text-cool-500 hover:text-ink"
-            }`}
-          >
-            Free
-          </button>
-          <button
-            onClick={() => updateParam("price", priceFilter === "paid" ? null : "paid")}
-            className={`rounded-full px-6 py-2 text-sm font-semibold transition-all duration-300 ${
-              priceFilter === "paid"
-                ? "bg-[#10CDB2] text-white shadow-[0_2px_12px_-4px_rgba(16,205,178,0.5)]"
-                : "text-cool-500 hover:text-ink"
-            }`}
-          >
-            Premium
-          </button>
+          {(["all", "free", "paid"] as const).map((label) => (
+            <button
+              key={label}
+              onClick={() => updateParam("price", label === "all" ? null : label)}
+              className={`rounded-full px-6 py-2 text-sm font-semibold capitalize transition-all duration-300 ${
+                priceFilter === label
+                  ? "bg-[#10CDB2] text-white shadow-[0_2px_12px_-4px_rgba(16,205,178,0.5)]"
+                  : "text-cool-500 hover:text-ink"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
 

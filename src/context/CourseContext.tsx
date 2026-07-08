@@ -47,9 +47,11 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   }, [submitted]);
 
   useEffect(() => {
-    fetchCourses().then((data) => { setSupabaseCourses(data); setLoading(false); });
+    fetchCourses()
+      .then((data) => { setSupabaseCourses(data); setLoading(false); })
+      .catch(() => { setLoading(false); });
     const interval = setInterval(() => {
-      fetchCourses().then(setSupabaseCourses);
+      fetchCourses().then(setSupabaseCourses).catch(() => {});
     }, 3600000);
     return () => clearInterval(interval);
   }, []);
