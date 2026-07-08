@@ -83,7 +83,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const displayCourses = supabaseCourses ?? [];
-  const fallback = displayCourses.length === 0 && !isSupabaseConfigured ? mockCourses : [];
+  const fallback = displayCourses.length === 0 ? mockCourses : [];
   const courses = [...displayCourses, ...fallback, ...submitted];
 
   function addCourse(course: Course) {
