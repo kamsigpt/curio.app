@@ -10,7 +10,7 @@ function isBoosted(boosted_until?: string | null): boolean {
 }
 
 export function Marketplace() {
-  const { courses } = useCourses();
+  const { courses, loading } = useCourses();
   const [params, setParams] = useSearchParams();
 
   useEffect(() => {
@@ -123,7 +123,18 @@ export function Marketplace() {
             </select>
           </div>
 
-          {filtered.length === 0 ? (
+          {loading ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="animate-pulse rounded-2xl border border-cool-100 bg-white p-4">
+                  <div className="h-40 w-full rounded-xl bg-cool-100" />
+                  <div className="mt-3 h-4 w-3/4 rounded bg-cool-100" />
+                  <div className="mt-2 h-3 w-1/2 rounded bg-cool-100" />
+                  <div className="mt-4 h-10 w-full rounded-xl bg-cool-100" />
+                </div>
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-cool-100 p-12 text-center">
               <p className="font-display font-semibold text-ink">No courses match these filters yet.</p>
               <p className="mt-1 text-sm text-cool-500">Try clearing a filter or searching a broader term.</p>

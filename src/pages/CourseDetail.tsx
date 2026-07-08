@@ -299,6 +299,10 @@ function PurchaseCard({
               {wishlisted ? "Wishlisted" : "Add to wishlist"}
             </button>
           )}
+          <p className="mt-4 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-xs leading-relaxed text-red-700">
+            <span className="mt-0.5 shrink-0 font-bold">⚠</span>
+            <span>Enroll with coupons immediately — they expire within 6 days or slots can be filled up quickly.</span>
+          </p>
         </div>
       </div>
     </div>

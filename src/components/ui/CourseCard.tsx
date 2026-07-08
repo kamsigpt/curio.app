@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CalendarDays, Check, Clock, ExternalLink, GraduationCap, ShoppingCart, Star } from "lucide-react";
 import type { Course } from "@/lib/types";
@@ -33,7 +34,7 @@ function relativeTime(value?: string): string | null {
   return `${Math.floor(months / 12)}y`;
 }
 
-export function CourseCard({ course }: { course: Course }) {
+export const CourseCard = memo(function CourseCard({ course }: { course: Course }) {
   const { toggleItem, isWishlisted } = useWishlist();
   const { profile } = useAuth();
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ export function CourseCard({ course }: { course: Course }) {
   const visibleTags = course.tags.slice(0, 3);
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-cool-100 bg-white text-ink shadow-card transition-all hover:-translate-y-1 hover:border-[#10CDB2] hover:shadow-cardHover">
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-cool-100 bg-white text-ink shadow-card transition-all hover:-translate-y-1 hover:border-[#10CDB2] hover:shadow-cardHover" style={{ contentVisibility: "auto" }}>
       <Link to={`/course/${course.slug}`} className="flex flex-1 flex-col">
         <div className="relative">
           {featured && (
@@ -165,4 +166,4 @@ export function CourseCard({ course }: { course: Course }) {
       </div>
     </div>
   );
-}
+});

@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 interface CourseContextValue {
   courses: Course[];
   addCourse: (course: Course) => void;
+  loading: boolean;
 }
 
 const CourseContext = createContext<CourseContextValue | undefined>(undefined);
@@ -31,6 +32,7 @@ async function fetchCourses(): Promise<Course[]> {
 
 export function CourseProvider({ children }: { children: ReactNode }) {
   const [supabaseCourses, setSupabaseCourses] = useState<Course[] | null>(null);
+  const [loading, setLoading] = useState(true);
   const [submitted, setSubmitted] = useState<Course[]>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -45,7 +47,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   }, [submitted]);
 
   useEffect(() => {
-    fetchCourses().then(setSupabaseCourses);
+    fetchCourses().then((data) => { setSupabaseCourses(data); setLoading(false); });
     const interval = setInterval(() => {
       fetchCourses().then(setSupabaseCourses);
     }, 3600000);
@@ -83,7 +85,7 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <CourseContext.Provider value={{ courses, addCourse }}>
+    <CourseContext.Provider value={{ courses, addCourse, loading }}>
       {children}
     </CourseContext.Provider>
   );
