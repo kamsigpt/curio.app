@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ShoppingCart, Menu, X, LogOut, LayoutDashboard, Shield } from "lucide-react";
+import { Search, Star, Menu, X, LogOut, LayoutDashboard, Shield } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
-import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
 
 export function Navbar() {
   const [query, setQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { items } = useCart();
+  const { wishlist } = useWishlist();
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -48,14 +48,14 @@ export function Navbar() {
 
         {profile && (
           <Link
-            to="/cart"
+            to="/wishlist"
             className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/45 text-ink transition hover:bg-white/80 hover:text-mint-600"
-            aria-label="Cart"
+            aria-label="Wishlist"
           >
-            <ShoppingCart size={20} />
-            {items.length > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-mint-500 text-[11px] font-bold text-ink">
-                {items.length}
+            <Star size={20} className={wishlist.length > 0 ? "fill-[#10CDB2] text-[#10CDB2]" : ""} />
+            {wishlist.length > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#10CDB2] text-[11px] font-bold text-ink">
+                {wishlist.length}
               </span>
             )}
           </Link>

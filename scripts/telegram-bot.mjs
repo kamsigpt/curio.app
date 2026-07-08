@@ -152,13 +152,33 @@ function parseRating(text) {
 }
 
 function parseLastUpdated(text) {
-  const match = text.match(/last\s+updated:\s*(\d{1,2})\/(\d{2,4})/i);
-  if (!match) return "";
-  const month = Number.parseInt(match[1], 10);
-  const rawYear = Number.parseInt(match[2], 10);
-  const year = rawYear < 100 ? 2000 + rawYear : rawYear;
-  if (month < 1 || month > 12) return "";
-  return `${year}-${String(month).padStart(2, "0")}-01T00:00:00.000Z`;
+  const mdy = text.match(/last\s+updated:\s*(\d{1,2})\/(\d{1,2})\/(\d{2,4})/i);
+  if (mdy) {
+    const month = Number.parseInt(mdy[1], 10);
+    const day = Number.parseInt(mdy[2], 10);
+    let year = Number.parseInt(mdy[3], 10);
+    if (year < 100) year += 2000;
+    if (month < 1 || month > 12 || day < 1 || day > 31) return "";
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T00:00:00.000Z`;
+  }
+  const my = text.match(/last\s+updated:\s*(\d{1,2})\/(\d{2,4})/i);
+  if (my) {
+    const month = Number.parseInt(my[1], 10);
+    let year = Number.parseInt(my[2], 10);
+    if (year < 100) year += 2000;
+    if (month < 1 || month > 12) return "";
+    return `${year}-${String(month).padStart(2, "0")}-01T00:00:00.000Z`;
+  }
+  const long = text.match(/last\s+updated:\s*(\w+)\s+(\d{1,2}),?\s*(\d{4})/i);
+  if (long) {
+    const months = { jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12 };
+    const month = months[long[1].toLowerCase().slice(0, 3)];
+    const day = Number.parseInt(long[2], 10);
+    const year = Number.parseInt(long[3], 10);
+    if (!month || day < 1 || day > 31) return "";
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T00:00:00.000Z`;
+  }
+  return "";
 }
 
 function parseInstructorName(text) {

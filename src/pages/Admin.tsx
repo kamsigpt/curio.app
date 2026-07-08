@@ -175,7 +175,7 @@ export function Admin() {
       student_count: parseInt(f.student_count) || 0,
       duration_hours: dur,
       lecture_count: lect,
-      last_updated: new Date().toISOString().split("T")[0],
+      last_updated: new Date().toISOString(),
       bestseller: f.bestseller,
       is_new: f.is_new,
       tags: tagList,

@@ -3,7 +3,7 @@ import { CalendarDays, Check, Clock, ExternalLink, GraduationCap, ShoppingCart, 
 import type { Course } from "@/lib/types";
 import { Badge } from "./Badge";
 import { CourseThumb } from "./CourseThumb";
-import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
 
 function isBoosted(boosted_until?: string | null): boolean {
@@ -34,10 +34,10 @@ function relativeTime(value?: string): string | null {
 }
 
 export function CourseCard({ course }: { course: Course }) {
-  const { addItem, isInCart } = useCart();
+  const { toggleItem, isWishlisted } = useWishlist();
   const { profile } = useAuth();
   const navigate = useNavigate();
-  const inCart = isInCart(course.id);
+  const wishlisted = isWishlisted(course.id);
   const featured = isBoosted(course.boosted_until);
   const lastUpdated = formatLastUpdated(course.last_updated);
   const visibleTags = course.tags.slice(0, 3);
@@ -50,6 +50,26 @@ export function CourseCard({ course }: { course: Course }) {
             <div className="absolute left-3 top-3 z-10 flex items-center gap-1 rounded-full bg-green-500 px-2.5 py-1 text-xs font-bold text-white shadow-md">
               <Star size={12} className="fill-white" /> Featured
             </div>
+          )}
+          {profile && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleItem(course);
+              }}
+              aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+              className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/70 shadow-sm backdrop-blur-sm transition hover:scale-110 active:scale-90"
+            >
+              <Star
+                size={18}
+                className={`transition-all duration-300 ${
+                  wishlisted
+                    ? "fill-[#10CDB2] text-[#10CDB2] scale-110"
+                    : "fill-transparent text-cool-400 hover:text-[#10CDB2]"
+                }`}
+              />
+            </button>
           )}
           <CourseThumb
             seed={course.id}
@@ -134,20 +154,13 @@ export function CourseCard({ course }: { course: Course }) {
             Enroll Now <ExternalLink size={16} />
           </a>
         ) : (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!profile) { navigate(`/signup?redirect=/course/${course.slug}`); return; }
-              if (!inCart) addItem(course);
-            }}
-            aria-label={inCart ? "Already in cart" : "Add to cart"}
-            className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-extrabold transition-colors ${
-              inCart ? "bg-mint-100 text-mint-700" : "bg-[#10CDB2] text-white hover:bg-mint-700"
-            }`}
+          <Link
+            to={`/course/${course.slug}`}
+            onClick={(e) => e.stopPropagation()}
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#10CDB2] text-sm font-extrabold text-white transition hover:bg-mint-700"
           >
-            {inCart ? <Check size={16} /> : <ShoppingCart size={16} />}
-            {inCart ? "Added" : "Enroll Now"}
-          </button>
+            View course <ExternalLink size={16} />
+          </Link>
         )}
       </div>
     </div>

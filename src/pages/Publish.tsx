@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle, TrendingUp, Eye, DollarSign, ArrowRight, Star, ExternalLink } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { useAuth } from "@/context/AuthContext";
-import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 import { useCourses } from "@/context/CourseContext";
 import type { Category, Instructor, Level } from "@/lib/types";
 
@@ -28,7 +28,7 @@ const benefits = [
 export function Publish() {
   const navigate = useNavigate();
   const { profile } = useAuth();
-  const { addItem, isInCart } = useCart();
+  const { isWishlisted } = useWishlist();
   const { addCourse } = useCourses();
   const [submitted, setSubmitted] = useState(false);
 
@@ -95,7 +95,7 @@ export function Publish() {
       student_count: 0,
       duration_hours: 0,
       lecture_count: 0,
-      last_updated: new Date().toISOString().split("T")[0],
+      last_updated: new Date().toISOString(),
       bestseller: false,
       is_new: true,
       tags: [category.name],
@@ -109,33 +109,7 @@ export function Publish() {
   }
 
   function handleAdvertise() {
-    const adItem = {
-      id: "ad-boost",
-      slug: "ad-boost",
-      title: "Course Promotion Boost",
-      subtitle: "Premium placement for 30 days",
-      description: "",
-      thumbnail_url: "",
-      provider: "Curio",
-      instructor: { id: "", name: "Curio", headline: "", avatar_url: "", bio: "", rating: 0, student_count: 0, course_count: 0 },
-      category: { id: "", name: "", slug: "", icon: "trending-up", course_count: 0 },
-      level: "All Levels" as const,
-      language: "English",
-      price: 10,
-      rating: 0,
-      rating_count: 0,
-      student_count: 0,
-      duration_hours: 0,
-      lecture_count: 0,
-      last_updated: "",
-      tags: [],
-      curriculum: [],
-      reviews: [],
-      what_you_will_learn: [],
-      requirements: [],
-    };
-    addItem(adItem);
-    navigate("/checkout");
+    navigate("/dashboard");
   }
 
   return (

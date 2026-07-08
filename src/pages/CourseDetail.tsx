@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/Badge";
 import { CourseThumb } from "@/components/ui/CourseThumb";
 import { CourseCard } from "@/components/ui/CourseCard";
 import { useAuth } from "@/context/AuthContext";
-import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 import { useCourses } from "@/context/CourseContext";
 import { formatPrice, totalLessons } from "@/lib/utils";
 import type { Course } from "@/lib/types";
@@ -28,7 +28,7 @@ export function CourseDetail() {
   const course = slug ? courses.find((item) => item.slug === slug) : undefined;
   const navigate = useNavigate();
   const { profile } = useAuth();
-  const { addItem, isInCart } = useCart();
+  const { toggleItem, isWishlisted } = useWishlist();
   const [openSection, setOpenSection] = useState<string | null>(null);
 
   if (!course) {
@@ -43,20 +43,14 @@ export function CourseDetail() {
     );
   }
 
-  const inCart = isInCart(course.id);
+  const wishlisted = isWishlisted(course.id);
   const related = courses
     .filter((item) => item.id !== course.id && item.category.slug === course.category.slug)
     .slice(0, 4);
 
-  function handleBuyNow() {
+  function handleToggleWishlist() {
     if (!profile) { navigate(`/signup?redirect=/course/${course!.slug}`); return; }
-    if (!inCart) addItem(course!);
-    navigate("/cart");
-  }
-
-  function handleAddToCart() {
-    if (!profile) { navigate(`/signup?redirect=/course/${course!.slug}`); return; }
-    addItem(course!);
+    toggleItem(course!);
   }
 
   return (
@@ -233,7 +227,7 @@ export function CourseDetail() {
         </div>
 
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <PurchaseCard course={course} inCart={inCart} profile={profile} onAddToCart={handleAddToCart} onBuyNow={handleBuyNow} />
+          <PurchaseCard course={course} wishlisted={wishlisted} profile={profile} onToggleWishlist={handleToggleWishlist} />
         </div>
       </div>
 
@@ -253,16 +247,14 @@ export function CourseDetail() {
 
 function PurchaseCard({
   course,
-  inCart,
+  wishlisted,
   profile,
-  onAddToCart,
-  onBuyNow,
+  onToggleWishlist,
 }: {
   course: Course;
-  inCart: boolean;
+  wishlisted: boolean;
   profile: any;
-  onAddToCart: () => void;
-  onBuyNow: () => void;
+  onToggleWishlist: () => void;
 }) {
   const navigate = useNavigate();
   return (
@@ -295,43 +287,18 @@ function PurchaseCard({
               Open course <ExternalLink size={16} />
             </a>
           ) : (
-            <>
-              <button
-                onClick={() => { if (!profile) { navigate(`/signup?redirect=/course/${course.slug}`); return; } onBuyNow(); }}
-                className="mt-4 w-full rounded-full bg-mint-500 py-3 text-sm font-semibold text-ink transition hover:bg-mint-600"
-              >
-                Buy now
-              </button>
-              <button
-                onClick={() => { if (!profile) { navigate(`/signup?redirect=/course/${course.slug}`); return; } onAddToCart(); }}
-                disabled={inCart}
-                className="mt-2.5 flex w-full items-center justify-center gap-2 rounded-full border border-ink py-3 text-sm font-semibold text-ink transition hover:bg-cool-50 disabled:border-mint-300 disabled:text-mint-700"
-              >
-                {inCart ? (
-                  <>
-                    <Check size={16} /> In your cart
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart size={16} /> Add to cart
-                  </>
-                )}
-              </button>
-            </>
+            <button
+              onClick={onToggleWishlist}
+              className={`mt-4 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold transition ${
+                wishlisted
+                  ? "bg-mint-100 text-mint-700 border border-mint-300"
+                  : "bg-mint-500 text-ink hover:bg-mint-600"
+              }`}
+            >
+              <Star size={16} className={wishlisted ? "fill-mint-700" : ""} />
+              {wishlisted ? "Wishlisted" : "Add to wishlist"}
+            </button>
           )}
-
-          {!course.external_url && <p className="mt-4 text-center text-xs text-cool-400">30-day money-back guarantee</p>}
-
-          <div className="mt-5 space-y-2 border-t border-cool-100 pt-4 text-sm text-cool-600">
-            <p>This course includes:</p>
-            <ul className="space-y-1.5">
-              {course.duration_hours > 0 && <li>{course.duration_hours} hours on-demand video</li>}
-              {course.lecture_count > 0 && <li>{course.lecture_count} lectures</li>}
-              <li>Full lifetime access</li>
-              <li>Access on mobile and desktop</li>
-              <li>Certificate of completion</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
