@@ -293,6 +293,8 @@ export async function run() {
     console.log("TELEGRAM_CHAT_ID not set - will process messages from all chats");
   }
 
+  await cleanupNewFlags();
+
   console.log(`Fetching Telegram updates for chat ${CHAT_ID}...`);
   const updates = await getTelegramUpdates();
   console.log(`Got ${updates.length} total updates`);
@@ -404,4 +406,36 @@ export async function run() {
   }
 
   console.log(`Done. ${inserted} new courses added. (${skippedNoUrls} messages had no URLs)`);
+}
+
+async function cleanupNewFlags() {
+  const now = new Date();
+  if (now.getUTCHours() !== 0) return;
+
+  console.log("Midnight check: cleaning up old is_new flags...");
+  const { data: flagged, error } = await supabase
+    .from("courses")
+    .select("id, created_at")
+    .eq("is_new", true);
+
+  if (error || !flagged?.length) {
+    console.log(`  -> ${error ? error.message : "no courses to update"}`);
+    return;
+  }
+
+  const cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  let updated = 0;
+
+  for (const course of flagged) {
+    const created = course.created_at ? new Date(course.created_at) : null;
+    if (created && !Number.isNaN(created.getTime()) && created < cutoff) {
+      const { error: updateError } = await supabase
+        .from("courses")
+        .update({ is_new: false })
+        .eq("id", course.id);
+      if (!updateError) updated++;
+    }
+  }
+
+  console.log(`  -> ${updated} courses had is_new removed`);
 }

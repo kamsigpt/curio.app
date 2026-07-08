@@ -10,7 +10,7 @@ import { Newsletter } from "@/components/home/Newsletter";
 import { courses } from "@/data/mockData";
 
 export function Home() {
-  const bestsellers = courses.filter((c) => c.bestseller);
+  const newReleases = courses.slice(0, 4);
 
   return (
     <>
@@ -21,7 +21,7 @@ export function Home() {
         <CourseRail
           title="New releases"
           subtitle="Recently published or updated by their instructors."
-          courses={bestsellers}
+          courses={newReleases}
         />
       </Reveal>
       <Reveal variant="popIn" duration={650} delay={80}><HowItWorks /></Reveal>

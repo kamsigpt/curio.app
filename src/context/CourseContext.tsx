@@ -48,6 +48,29 @@ export function CourseProvider({ children }: { children: ReactNode }) {
     fetchCourses().then(setSupabaseCourses);
   }, []);
 
+  useEffect(() => {
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setDate(midnight.getDate() + 1);
+    midnight.setHours(0, 0, 0, 0);
+    const msUntilMidnight = midnight.getTime() - now.getTime();
+
+    const timer = setTimeout(() => {
+      const today = new Date().toISOString().split("T")[0];
+      setSubmitted((prev) =>
+        prev.map((c) => {
+          if (!c.is_new) return c;
+          if (c.last_updated && c.last_updated !== today) {
+            return { ...c, is_new: false };
+          }
+          return c;
+        })
+      );
+    }, msUntilMidnight);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const displayCourses = supabaseCourses ?? [];
   const courses = [...displayCourses, ...submitted];
 
