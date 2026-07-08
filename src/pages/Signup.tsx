@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Logo } from "@/components/ui/Logo";
 import { Reveal } from "@/components/ui/Reveal";
 import { useAuth } from "@/context/AuthContext";
@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 export function Signup() {
   const { signUp, signInWithGoogle, isDemo } = useAuth();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +21,7 @@ export function Signup() {
     const { error } = await signUp(email, password, fullName);
     setLoading(false);
     if (error) setError(error);
-    else navigate("/dashboard");
+    else navigate(params.get("redirect") || "/dashboard");
   }
 
   return (

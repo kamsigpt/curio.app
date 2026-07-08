@@ -126,7 +126,7 @@ export const courses: Course[] = [
     subtitle: "Pandas, visualization and real-world analysis projects",
     description:
       "Skip the theory-heavy intros. This bootcamp gets you cleaning, analyzing and visualizing real datasets in your first week, building toward a complete analysis project you can show employers.",
-    thumbnail_url: "data-1",
+    thumbnail_url: "https://picsum.photos/seed/data-1/400/225",
     provider: "Independent Tutor",
     instructor: instructors[2],
     category: categories[4],
@@ -168,7 +168,7 @@ export const courses: Course[] = [
     subtitle: "From linear regression to gradient boosting, with intuition first",
     description:
       "A model-by-model tour of machine learning built around intuition before math. Each model is taught through a real dataset, with an honest look at when it works, when it fails, and why.",
-    thumbnail_url: "data-2",
+    thumbnail_url: "https://picsum.photos/seed/data-2/400/225",
     provider: "Coursera Partner",
     instructor: instructors[2],
     category: categories[4],
@@ -209,7 +209,7 @@ export const courses: Course[] = [
     subtitle: "Channels, experiments and funnels that compound",
     description:
       "A no-fluff walkthrough of how startups actually grow: choosing channels, running experiments that produce real signal, and building funnels that compound instead of leaking.",
-    thumbnail_url: "marketing-1",
+    thumbnail_url: "https://picsum.photos/seed/marketing-1/400/225",
     provider: "Curio Original",
     instructor: instructors[3],
     category: categories[3],
@@ -248,7 +248,7 @@ export const courses: Course[] = [
     subtitle: "Research, structure and write content built to be found",
     description:
       "Learn the research and structural work behind content that ranks: keyword clustering, search intent, on-page structure, and a sustainable content calendar that doesn't burn you out.",
-    thumbnail_url: "marketing-2",
+    thumbnail_url: "https://picsum.photos/seed/marketing-2/400/225",
     provider: "Independent Tutor",
     instructor: instructors[3],
     category: categories[3],
@@ -286,7 +286,7 @@ export const courses: Course[] = [
     subtitle: "Model your runway, raise smart, and read a cap table",
     description:
       "Everything a non-finance founder needs: building a simple financial model, understanding runway and burn, reading a cap table, and knowing what investors are actually evaluating.",
-    thumbnail_url: "business-1",
+    thumbnail_url: "https://picsum.photos/seed/business-1/400/225",
     provider: "Curio Original",
     instructor: instructors[6],
     category: categories[2],
@@ -325,7 +325,7 @@ export const courses: Course[] = [
     subtitle: "Lead meetings, give feedback, and decide under uncertainty",
     description:
       "A practical course for new and aspiring leaders on the communication and decision habits that separate effective managers from everyone else, drawn from over a decade of executive coaching.",
-    thumbnail_url: "growth-1",
+    thumbnail_url: "https://picsum.photos/seed/growth-1/400/225",
     provider: "Independent Tutor",
     instructor: instructors[6],
     category: categories[7],
@@ -366,7 +366,7 @@ export const courses: Course[] = [
     subtitle: "Composition, light and a professional editing workflow",
     description:
       "Learn to see and shoot like a working travel photographer: composition under pressure, working with available light, and a complete editing workflow from RAW file to final image.",
-    thumbnail_url: "photo-1",
+    thumbnail_url: "https://picsum.photos/seed/photo-1/400/225",
     provider: "Independent Tutor",
     instructor: instructors[4],
     category: categories[5],
@@ -404,7 +404,7 @@ export const courses: Course[] = [
     subtitle: "Shape light with confidence, in the studio or on the go",
     description:
       "A focused course on portrait lighting: classic studio setups, modifying light with simple gear, and adapting your lighting kit for on-location shoots.",
-    thumbnail_url: "photo-2",
+    thumbnail_url: "https://picsum.photos/seed/photo-2/400/225",
     provider: "Udemy",
     instructor: instructors[4],
     category: categories[5],
@@ -436,7 +436,7 @@ export const courses: Course[] = [
     subtitle: "Write, record, mix and master on a real-world budget",
     description:
       "A complete, budget-aware path through home music production: writing and arranging, recording clean takes, mixing with intent, and mastering a release-ready track.",
-    thumbnail_url: "music-1",
+    thumbnail_url: "https://picsum.photos/seed/music-1/400/225",
     provider: "Independent Tutor",
     instructor: instructors[7],
     category: categories[6],
@@ -475,7 +475,7 @@ export const courses: Course[] = [
     subtitle: "Build attention back, one deliberate habit at a time",
     description:
       "A practical system for reclaiming focus in a distraction-saturated world, combining attention-training exercises with the scheduling habits that protect deep work.",
-    thumbnail_url: "growth-2",
+    thumbnail_url: "https://picsum.photos/seed/growth-2/400/225",
     provider: "Curio Original",
     instructor: instructors[6],
     category: categories[7],
@@ -507,7 +507,7 @@ export const courses: Course[] = [
     subtitle: "Container queries, design tokens, and scalable component CSS",
     description:
       "Go beyond layout basics into the CSS that powers real design systems: tokens, container queries, logical properties, and patterns for component CSS that scales across a large product.",
-    thumbnail_url: "dev-3",
+    thumbnail_url: "https://picsum.photos/seed/dev-3/400/225",
     provider: "Udemy",
     instructor: instructors[0],
     category: categories[0],
@@ -547,7 +547,7 @@ export const courses: Course[] = [
     subtitle: "Specs, tokens and a workflow designers and engineers both trust",
     description:
       "A practical bridge between design and engineering: structuring Figma files for handoff, exporting tokens, and building a shared workflow that stops 'pixel-perfect' arguments before they start.",
-    thumbnail_url: "design-3",
+    thumbnail_url: "https://picsum.photos/seed/design-3/400/225",
     provider: "Coursera Partner",
     instructor: instructors[1],
     category: categories[1],

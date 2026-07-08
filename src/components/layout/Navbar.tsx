@@ -46,18 +46,20 @@ export function Navbar() {
           </Link>
         </nav>
 
-        <Link
-          to="/cart"
-          className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/45 text-ink transition hover:bg-white/80 hover:text-mint-600"
-          aria-label="Cart"
-        >
-          <ShoppingCart size={20} />
-          {profile && items.length > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-mint-500 text-[11px] font-bold text-ink">
-              {items.length}
-            </span>
-          )}
-        </Link>
+        {profile && (
+          <Link
+            to="/cart"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/45 text-ink transition hover:bg-white/80 hover:text-mint-600"
+            aria-label="Cart"
+          >
+            <ShoppingCart size={20} />
+            {items.length > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-mint-500 text-[11px] font-bold text-ink">
+                {items.length}
+              </span>
+            )}
+          </Link>
+        )}
 
         {profile ? (
           <div className="relative hidden md:block">

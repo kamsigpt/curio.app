@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CalendarDays, Check, Clock, ExternalLink, GraduationCap, ShoppingCart, Star } from "lucide-react";
 import type { Course } from "@/lib/types";
 import { Badge } from "./Badge";
 import { CourseThumb } from "./CourseThumb";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 function isBoosted(boosted_until?: string | null): boolean {
   if (!boosted_until) return false;
@@ -19,6 +20,8 @@ function formatLastUpdated(value?: string) {
 
 export function CourseCard({ course }: { course: Course }) {
   const { addItem, isInCart } = useCart();
+  const { profile } = useAuth();
+  const navigate = useNavigate();
   const inCart = isInCart(course.id);
   const featured = isBoosted(course.boosted_until);
   const lastUpdated = formatLastUpdated(course.last_updated);
@@ -97,10 +100,13 @@ export function CourseCard({ course }: { course: Course }) {
       <div className="px-4 pb-4">
         {course.external_url ? (
           <a
-            href={course.external_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
+            href={profile ? course.external_url : "#"}
+            target={profile ? "_blank" : undefined}
+            rel={profile ? "noopener noreferrer" : undefined}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!profile) navigate(`/signup?redirect=/course/${course.slug}`);
+            }}
             className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#10CDB2] px-4 text-sm font-extrabold text-white transition hover:bg-mint-700"
           >
             Enroll Now <ExternalLink size={16} />
@@ -109,6 +115,7 @@ export function CourseCard({ course }: { course: Course }) {
           <button
             onClick={(e) => {
               e.stopPropagation();
+              if (!profile) { navigate(`/signup?redirect=/course/${course.slug}`); return; }
               if (!inCart) addItem(course);
             }}
             aria-label={inCart ? "Already in cart" : "Add to cart"}

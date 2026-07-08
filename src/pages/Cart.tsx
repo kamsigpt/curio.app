@@ -1,12 +1,20 @@
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Trash2, ShoppingBag, ExternalLink } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { formatPrice } from "@/lib/utils";
 import { CourseThumb } from "@/components/ui/CourseThumb";
 import { Rating } from "@/components/ui/Rating";
 
 export function Cart() {
   const { items, removeItem } = useCart();
+  const { profile } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!profile) navigate("/signup?redirect=/cart", { replace: true });
+  }, [profile]);
   const curioItems = items.filter((c) => c.provider === "Curio");
   const curioSubtotal = curioItems.reduce((s, c) => s + c.price, 0);
   const curioSavings = curioItems.reduce((s, c) => s + ((c.original_price ?? c.price) - c.price), 0);

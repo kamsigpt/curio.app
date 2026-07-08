@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CheckCircle, TrendingUp, Eye, DollarSign, ArrowRight, Star, ExternalLink } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
+import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { useCourses } from "@/context/CourseContext";
 import type { Category, Instructor, Level } from "@/lib/types";
@@ -26,7 +27,8 @@ const benefits = [
 
 export function Publish() {
   const navigate = useNavigate();
-  const { addItem } = useCart();
+  const { profile } = useAuth();
+  const { addItem, isInCart } = useCart();
   const { addCourse } = useCourses();
   const [submitted, setSubmitted] = useState(false);
 
@@ -137,15 +139,33 @@ export function Publish() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-      <Reveal variant="fadeUp" duration={600} className="mb-12 text-center">
-        <h1 className="font-display text-3xl font-bold text-ink sm:text-4xl">
-          Publish on <span className="text-[#10CDB2]">Curio</span>
-        </h1>
-        <p className="mx-auto mt-3 max-w-2xl text-sm text-cool-500 sm:text-base">
-          Already teaching? Share your course with learners actively searching for their next skill. Keep your own
-          pricing, maintain your brand, and reach motivated students across the web.
-        </p>
+    <div className="relative">
+      {!profile && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md">
+          <div className="mx-4 w-full max-w-md rounded-2xl border border-cool-100 bg-white p-8 shadow-xl text-center">
+            <h2 className="font-display text-xl font-bold text-ink">Join Curio to Publish</h2>
+            <p className="mt-2 text-sm text-cool-500">Create an account or log in to start publishing your courses.</p>
+            <div className="mt-6 flex flex-col gap-3">
+              <Link to="/signup?redirect=/publish" className="w-full rounded-full bg-[#10CDB2] py-3 text-sm font-semibold text-white hover:bg-mint-700">
+                Sign up
+              </Link>
+              <Link to="/login?redirect=/publish" className="w-full rounded-full border border-ink py-3 text-sm font-semibold text-ink hover:bg-cool-50">
+                Log in
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className={!profile ? "pointer-events-none select-none blur-sm" : ""}>
+        <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+          <Reveal variant="fadeUp" duration={600} className="mb-12 text-center">
+            <h1 className="font-display text-3xl font-bold text-ink sm:text-4xl">
+              Publish on <span className="text-[#10CDB2]">Curio</span>
+            </h1>
+            <p className="mx-auto mt-3 max-w-2xl text-sm text-cool-500 sm:text-base">
+              Already teaching? Share your course with learners actively searching for their next skill. Keep your own
+              pricing, maintain your brand, and reach motivated students across the web.
+            </p>
       </Reveal>
 
       <Reveal variant="popIn" duration={650} delay={80} className="mb-12 grid gap-6 sm:grid-cols-3">
@@ -284,6 +304,8 @@ export function Publish() {
           </button>
         </div>
       </Reveal>
-    </div>
+          </div>
+        </div>
+      </div>
   );
 }
