@@ -18,6 +18,21 @@ function formatLastUpdated(value?: string) {
   return new Intl.DateTimeFormat("en", { month: "2-digit", year: "2-digit" }).format(date);
 }
 
+function relativeTime(value?: string): string | null {
+  if (!value) return null;
+  const diff = Date.now() - new Date(value).getTime();
+  if (diff < 0) return null;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `${mins}min`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months}mo`;
+  return `${Math.floor(months / 12)}y`;
+}
+
 export function CourseCard({ course }: { course: Course }) {
   const { addItem, isInCart } = useCart();
   const { profile } = useAuth();
@@ -88,13 +103,20 @@ export function CourseCard({ course }: { course: Course }) {
               </span>
             </p>
           </div>
-          {visibleTags.length > 0 && (
-            <div className="flex flex-wrap gap-x-2 gap-y-1 pt-2 text-sm font-bold text-mint-700">
-              {visibleTags.map((tag) => (
-                <span key={tag}>#{tag.replace(/^#/, "").replace(/\s+/g, "_")}</span>
-              ))}
-            </div>
-          )}
+          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 pt-2">
+            {visibleTags.length > 0 && (
+              <div className="flex flex-wrap gap-x-2 gap-y-1 text-sm font-bold text-mint-700">
+                {visibleTags.map((tag) => (
+                  <span key={tag}>#{tag.replace(/^#/, "").replace(/\s+/g, "_")}</span>
+                ))}
+              </div>
+            )}
+            {relativeTime(course.last_updated) && (
+              <span className="ml-auto shrink-0 text-xs font-semibold text-cool-400">
+                {relativeTime(course.last_updated)}
+              </span>
+            )}
+          </div>
         </div>
       </Link>
       <div className="px-4 pb-4">

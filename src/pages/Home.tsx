@@ -7,10 +7,16 @@ import { HowItWorks } from "@/components/home/HowItWorks";
 import { InstructorCTA } from "@/components/home/InstructorCTA";
 import { Faq } from "@/components/home/Faq";
 import { Newsletter } from "@/components/home/Newsletter";
-import { courses } from "@/data/mockData";
+import { useCourses } from "@/context/CourseContext";
 
 export function Home() {
-  const newReleases = courses.slice(0, 4);
+  const { courses } = useCourses();
+  const sorted = [...courses].sort((a, b) => {
+    const dateA = a.last_updated ? new Date(a.last_updated).getTime() : 0;
+    const dateB = b.last_updated ? new Date(b.last_updated).getTime() : 0;
+    return dateB - dateA;
+  });
+  const newReleases = sorted.slice(0, 4);
 
   return (
     <>

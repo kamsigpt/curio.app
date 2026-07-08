@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, type NavigateFunction } from "react-router-dom";
 import {
   BarChart,
   Check,
@@ -16,6 +16,7 @@ import { Rating } from "@/components/ui/Rating";
 import { Badge } from "@/components/ui/Badge";
 import { CourseThumb } from "@/components/ui/CourseThumb";
 import { CourseCard } from "@/components/ui/CourseCard";
+import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { useCourses } from "@/context/CourseContext";
 import { formatPrice, totalLessons } from "@/lib/utils";
@@ -26,6 +27,7 @@ export function CourseDetail() {
   const { courses } = useCourses();
   const course = slug ? courses.find((item) => item.slug === slug) : undefined;
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const { addItem, isInCart } = useCart();
   const [openSection, setOpenSection] = useState<string | null>(null);
 
@@ -47,8 +49,14 @@ export function CourseDetail() {
     .slice(0, 4);
 
   function handleBuyNow() {
+    if (!profile) { navigate(`/signup?redirect=/course/${course!.slug}`); return; }
     if (!inCart) addItem(course!);
     navigate("/cart");
+  }
+
+  function handleAddToCart() {
+    if (!profile) { navigate(`/signup?redirect=/course/${course!.slug}`); return; }
+    addItem(course!);
   }
 
   return (
@@ -225,7 +233,7 @@ export function CourseDetail() {
         </div>
 
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <PurchaseCard course={course} inCart={inCart} onAddToCart={() => addItem(course)} onBuyNow={handleBuyNow} />
+          <PurchaseCard course={course} inCart={inCart} profile={profile} onAddToCart={handleAddToCart} onBuyNow={handleBuyNow} />
         </div>
       </div>
 
@@ -246,14 +254,17 @@ export function CourseDetail() {
 function PurchaseCard({
   course,
   inCart,
+  profile,
   onAddToCart,
   onBuyNow,
 }: {
   course: Course;
   inCart: boolean;
+  profile: any;
   onAddToCart: () => void;
   onBuyNow: () => void;
 }) {
+  const navigate = useNavigate();
   return (
     <div className="lg:sticky lg:top-24 lg:self-start">
       <div className="overflow-hidden rounded-2xl border border-cool-100 bg-white text-ink shadow-cardHover">
@@ -273,9 +284,12 @@ function PurchaseCard({
 
           {course.external_url ? (
             <a
-              href={course.external_url}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={profile ? course.external_url : "#"}
+              target={profile ? "_blank" : undefined}
+              rel={profile ? "noopener noreferrer" : undefined}
+              onClick={(e) => {
+                if (!profile) { e.preventDefault(); navigate(`/signup?redirect=/course/${course.slug}`); }
+              }}
               className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-mint-500 py-3 text-sm font-semibold text-ink transition hover:bg-mint-600"
             >
               Open course <ExternalLink size={16} />
@@ -283,13 +297,13 @@ function PurchaseCard({
           ) : (
             <>
               <button
-                onClick={onBuyNow}
+                onClick={() => { if (!profile) { navigate(`/signup?redirect=/course/${course.slug}`); return; } onBuyNow(); }}
                 className="mt-4 w-full rounded-full bg-mint-500 py-3 text-sm font-semibold text-ink transition hover:bg-mint-600"
               >
                 Buy now
               </button>
               <button
-                onClick={onAddToCart}
+                onClick={() => { if (!profile) { navigate(`/signup?redirect=/course/${course.slug}`); return; } onAddToCart(); }}
                 disabled={inCart}
                 className="mt-2.5 flex w-full items-center justify-center gap-2 rounded-full border border-ink py-3 text-sm font-semibold text-ink transition hover:bg-cool-50 disabled:border-mint-300 disabled:text-mint-700"
               >
