@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { Course } from "@/lib/types";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { useAuth } from "./AuthContext";
 
 interface CourseContextValue {
   courses: Course[];
@@ -37,6 +38,7 @@ async function fetchCourses(): Promise<Course[]> {
 }
 
 export function CourseProvider({ children }: { children: ReactNode }) {
+  const { loading: authLoading } = useAuth();
   const [supabaseCourses, setSupabaseCourses] = useState<Course[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitted, setSubmitted] = useState<Course[]>(() => {
@@ -53,14 +55,32 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   }, [submitted]);
 
   useEffect(() => {
-    fetchCourses()
-      .then((data) => { setSupabaseCourses(data); setLoading(false); })
-      .catch(() => { setLoading(false); });
+    if (authLoading) return;
+
+    let cancelled = false;
+
+    async function load(attempt = 1): Promise<void> {
+      const data = await fetchCourses();
+      if (cancelled) return;
+      if (data.length > 0) {
+        setSupabaseCourses(data);
+        setLoading(false);
+      } else if (attempt < 4) {
+        setTimeout(() => load(attempt + 1), attempt * 1000);
+      } else {
+        setSupabaseCourses([]);
+        setLoading(false);
+      }
+    }
+
+    load();
+
     const interval = setInterval(() => {
       fetchCourses().then(setSupabaseCourses).catch(() => {});
     }, 3600000);
-    return () => clearInterval(interval);
-  }, []);
+
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [authLoading]);
 
   useEffect(() => {
     const now = new Date();
