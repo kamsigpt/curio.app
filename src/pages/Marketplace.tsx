@@ -108,8 +108,8 @@ export function Marketplace() {
             </select>
           </div>
 
-          {loading ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {loading || filtered.length === 0 ? (
+            <div className="relative grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="animate-pulse rounded-2xl border border-cool-100 bg-white p-4">
                   <div className="h-40 w-full rounded-xl bg-cool-100" />
@@ -118,11 +118,14 @@ export function Marketplace() {
                   <div className="mt-4 h-10 w-full rounded-xl bg-cool-100" />
                 </div>
               ))}
-            </div>
-          ) : filtered.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-cool-100 p-12 text-center">
-              <p className="font-display font-semibold text-ink">No courses match these filters yet.</p>
-              <p className="mt-1 text-sm text-cool-500">Try clearing a filter or searching a broader term.</p>
+              {!loading && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="rounded-xl bg-white/80 px-6 py-3 text-center shadow-lg backdrop-blur-sm">
+                    <p className="font-display font-semibold text-ink">No courses match these filters yet.</p>
+                    <p className="text-sm text-cool-500">Try clearing a filter or searching a broader term.</p>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
