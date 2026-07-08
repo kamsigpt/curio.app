@@ -18,7 +18,6 @@ export function Cart() {
   const curioItems = items.filter((c) => c.provider === "Curio");
   const curioSubtotal = curioItems.reduce((s, c) => s + c.price, 0);
   const curioSavings = curioItems.reduce((s, c) => s + ((c.original_price ?? c.price) - c.price), 0);
-  const navigate = useNavigate();
 
   if (items.length === 0) {
     return (
