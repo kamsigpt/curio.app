@@ -228,7 +228,7 @@ function parseCourseText(text, og, courseUrl) {
     duration_hours: parseDuration(text),
     lecture_count: parseLectureCount(text),
     updated_at: parseLastUpdated(text),
-    tags: tags.length ? tags : ["free", "telegram"],
+    tags: tags.length ? tags : ["free"],
     ...rating,
   };
 }
@@ -385,7 +385,7 @@ export async function run() {
       lecture_count: parsed.lecture_count,
       bestseller: false,
       is_new: true,
-      tags: unique(["free", "telegram", catSlug, ...parsed.tags]),
+      tags: unique(["free", catSlug, ...parsed.tags]),
       what_you_will_learn: [],
       requirements: [],
       curriculum: [],
