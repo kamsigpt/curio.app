@@ -187,10 +187,7 @@ export function Publish() {
           </div>
         ) : (
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSubmitted(true);
-            }}
+            onSubmit={handleSubmit}
             className="space-y-5 rounded-2xl border border-cool-100 p-6 sm:p-8"
           >
             <div className="grid gap-5 sm:grid-cols-2">
@@ -229,7 +226,7 @@ export function Publish() {
             </div>
             <div>
               <label className="mb-1.5 block text-sm font-medium text-ink">Course Link</label>
-              <input ref={linkRef} type="url" required placeholder="https://yourplatform.com/course-link" className="w-full rounded-xl border border-cool-100 px-4 py-3 text-sm outline-none focus:border-[#10CDB2] focus:shadow-[0_0_0_3px_rgba(16,205,178,0.12)]" />
+              <input ref={linkRef} type="url" placeholder="https://yourplatform.com/course-link (optional)" className="w-full rounded-xl border border-cool-100 px-4 py-3 text-sm outline-none focus:border-[#10CDB2] focus:shadow-[0_0_0_3px_rgba(16,205,178,0.12)]" />
               <p className="mt-1 text-xs text-cool-400">Paste the URL where students can access your course (Udemy, your own site, etc.)</p>
             </div>
             <div>

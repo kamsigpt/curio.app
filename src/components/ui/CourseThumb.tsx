@@ -42,10 +42,14 @@ function hashString(input: string): number {
 export function CourseThumb({
   seed,
   categoryIcon,
+  imageUrl,
+  alt,
   className,
 }: {
   seed: string;
   categoryIcon: string;
+  imageUrl?: string;
+  alt?: string;
   className?: string;
 }) {
   const Icon = ICONS[categoryIcon] ?? Code2;
@@ -60,14 +64,29 @@ export function CourseThumb({
         className
       )}
     >
-      <Swoosh
-        className="absolute -right-6 -bottom-8 h-40 w-40 text-white/15"
-        style={{ transform: `rotate(${rotate}deg)` }}
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <Icon className="h-12 w-12 text-white/90" strokeWidth={1.6} />
-      </div>
-      <div className="absolute left-3 top-3 h-2 w-2 rounded-full bg-white/40" />
+      {imageUrl && /^https?:\/\//i.test(imageUrl) && (
+        <img
+          src={imageUrl}
+          alt={alt ?? ""}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      )}
+      {imageUrl && /^https?:\/\//i.test(imageUrl) && (
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+      )}
+      {!imageUrl || !/^https?:\/\//i.test(imageUrl) ? (
+        <>
+          <Swoosh
+            className="absolute -right-6 -bottom-8 h-40 w-40 text-white/15"
+            style={{ transform: `rotate(${rotate}deg)` }}
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Icon className="h-12 w-12 text-white/90" strokeWidth={1.6} />
+          </div>
+          <div className="absolute left-3 top-3 h-2 w-2 rounded-full bg-white/40" />
+        </>
+      ) : null}
     </div>
   );
 }
