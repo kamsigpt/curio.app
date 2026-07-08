@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { Course } from "@/lib/types";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { courses as mockCourses } from "@/data/mockData";
 
 interface CourseContextValue {
   courses: Course[];
@@ -13,9 +14,11 @@ const CourseContext = createContext<CourseContextValue | undefined>(undefined);
 const STORAGE_KEY = "curio_submitted_courses_v2";
 
 async function fetchCourses(): Promise<Course[]> {
-  const { data } = await supabase
+  if (!isSupabaseConfigured) return [];
+  const { data, error } = await supabase
     .from("courses")
     .select("*, instructor:instructors(*), category:categories(*)");
+  if (error) { console.warn("Supabase fetch error:", error); return []; }
   if (!data || data.length === 0) return [];
   return data.map((row: Record<string, unknown>) => ({
     ...(row as any),
@@ -80,7 +83,8 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const displayCourses = supabaseCourses ?? [];
-  const courses = [...displayCourses, ...submitted];
+  const fallback = displayCourses.length === 0 && !isSupabaseConfigured ? mockCourses : [];
+  const courses = [...displayCourses, ...fallback, ...submitted];
 
   function addCourse(course: Course) {
     setSubmitted((prev) => [...prev, course]);
