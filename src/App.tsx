@@ -14,6 +14,10 @@ import { Signup } from "@/pages/Signup";
 import { Dashboard } from "@/pages/Dashboard";
 import { Admin } from "@/pages/Admin";
 import { Publish } from "@/pages/Publish";
+import { PublishForm } from "@/pages/PublishForm";
+import { Privacy } from "@/pages/Privacy";
+import { Terms } from "@/pages/Terms";
+import { Sitemap } from "@/pages/Sitemap";
 import { NotFound } from "@/pages/NotFound";
 
 function AppRoutes() {
@@ -45,6 +49,10 @@ function AppRoutes() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/publish" element={<Publish />} />
+          <Route path="/publish/submit" element={<PublishForm />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/sitemap" element={<Sitemap />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>

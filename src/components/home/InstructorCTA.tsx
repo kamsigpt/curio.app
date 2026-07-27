@@ -19,7 +19,7 @@ export function InstructorCTA() {
             motivated learners comparing the best learning options—all while earning from your expertise.
           </p>
           <Link
-            to="/marketplace?teach=1"
+            to="/publish"
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-semibold text-white shadow-glow transition hover:bg-mint-500 hover:text-ink"
           >
             Publish Your Course <ArrowRight size={16} />

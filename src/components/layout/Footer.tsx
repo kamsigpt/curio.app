@@ -15,7 +15,7 @@ const columns = [
   {
     title: "Curio",
     links: [
-      { label: "About us", to: "/" },
+      { label: "About us", to: "/about" },
       { label: "Publish on Curio", to: "/publish" },
       { label: "Help & support", to: "/" },
     ],
@@ -83,13 +83,13 @@ export function Footer() {
         <div className="mt-12 flex flex-col gap-3 border-t border-white/70 pt-6 text-xs text-cool-400 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {new Date().getFullYear()} Hyle Studios. All rights reserved.</p>
           <div className="flex gap-5">
-            <Link to="/" className="hover:text-cool-700">
+            <Link to="/privacy" className="hover:text-cool-700">
               Privacy
             </Link>
-            <Link to="/" className="hover:text-cool-700">
+            <Link to="/terms" className="hover:text-cool-700">
               Terms
             </Link>
-            <Link to="/" className="hover:text-cool-700">
+            <Link to="/sitemap" className="hover:text-cool-700">
               Sitemap
             </Link>
           </div>
