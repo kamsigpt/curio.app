@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Search,
@@ -16,11 +17,51 @@ import {
   Compass,
 } from "lucide-react";
 
-const stats = [
-  { label: "Courses catalogued", value: "10,000+" },
-  { label: "Platforms unified", value: "12" },
-  { label: "Learners reached", value: "50,000+" },
-  { label: "Countries", value: "30+" },
+function useCountUp(target: number, duration = 2000, suffix = "") {
+  const [count, setCount] = useState(0);
+  const [started, setStarted] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started) {
+          setStarted(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [started]);
+
+  useEffect(() => {
+    if (!started) return;
+    const steps = 60;
+    const increment = target / steps;
+    let current = 0;
+    const interval = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        setCount(target);
+        clearInterval(interval);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(interval);
+  }, [started, target, duration]);
+
+  return { count, ref, suffix };
+}
+
+const statsConfig = [
+  { label: "Courses catalogued", target: 10000, suffix: "+" },
+  { label: "Platforms unified", target: 12, suffix: "" },
+  { label: "Courses reviewed", target: 8500, suffix: "+" },
+  { label: "Countries", target: 30, suffix: "+" },
 ];
 
 const values = [
@@ -123,7 +164,7 @@ export function About() {
             </Link>
             <Link
               to="/signup"
-              className="inline-flex items-center gap-2 rounded-full border border-cool-200 bg-white/70 px-6 py-3 text-sm font-semibold text-ink transition hover:border-cool-300 hover:bg-white"
+              className="inline-flex items-center gap-2 rounded-full border border-cool-200 bg-white/70 px-6 py-3 text-sm font-semibold text-ink transition hover:border-[#10CDB2] hover:bg-[#10CDB2] hover:text-white"
             >
               Join Curio Now
             </Link>
@@ -135,12 +176,17 @@ export function About() {
       <section className="border-y border-cool-100 bg-white/50 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
-            {stats.map((s) => (
-              <div key={s.label} className="text-center">
-                <p className="font-display text-3xl font-bold text-ink sm:text-4xl">{s.value}</p>
-                <p className="mt-1 text-sm text-cool-500">{s.label}</p>
-              </div>
-            ))}
+            {statsConfig.map((s) => {
+              const { count, ref, suffix } = useCountUp(s.target, 2000, s.suffix);
+              return (
+                <div key={s.label} ref={ref} className="text-center">
+                  <p className="font-display text-3xl font-bold text-ink sm:text-4xl">
+                    {count.toLocaleString()}{suffix}
+                  </p>
+                  <p className="mt-1 text-sm text-cool-500">{s.label}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
