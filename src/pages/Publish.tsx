@@ -12,7 +12,7 @@ import {
   Zap,
   Users,
   BookOpen,
-  Sparkles,
+
   Target,
   Award,
 } from "lucide-react";
@@ -97,13 +97,8 @@ export function Publish() {
       <section className="relative overflow-hidden px-4 pb-16 pt-20 sm:px-6 sm:pt-28 lg:px-8">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-mint-100/40 via-white to-transparent" />
         <div className="relative mx-auto max-w-4xl text-center">
-          <Reveal variant="fadeUp" duration={600}>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-mint-200 bg-mint-50 px-4 py-1.5 text-xs font-medium text-mint-700">
-              <Sparkles size={13} /> For Instructors & Creators
-            </span>
-          </Reveal>
           <Reveal variant="fadeUp" duration={600} delay={80}>
-            <h1 className="mt-6 font-display text-4xl font-bold text-ink sm:text-5xl lg:text-6xl">
+            <h1 className="font-display text-4xl font-bold text-ink sm:text-5xl lg:text-6xl">
               Share What You Teach.
               <br />
               <span className="text-[#10CDB2]">Get Discovered.</span>
@@ -124,12 +119,6 @@ export function Publish() {
               >
                 Start Publishing <ArrowRight size={16} />
               </Link>
-              <a
-                href="#how-it-works"
-                className="inline-flex items-center gap-2 rounded-full border border-cool-200 bg-white/70 px-8 py-3.5 text-sm font-semibold text-ink transition hover:border-cool-300 hover:bg-white"
-              >
-                Learn How It Works
-              </a>
             </div>
           </Reveal>
         </div>

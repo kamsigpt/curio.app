@@ -8,8 +8,7 @@ import {
   ArrowRight,
   Star,
   ExternalLink,
-  ArrowLeft,
-  Sparkles,
+
 } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { useAuth } from "@/context/AuthContext";
@@ -145,39 +144,10 @@ export function PublishForm() {
       )}
 
       <div className={!profile ? "pointer-events-none select-none blur-sm" : ""}>
-        {/* Header */}
-        <section className="relative overflow-hidden px-4 pb-10 pt-20 sm:px-6 sm:pt-28 lg:px-8">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-mint-100/40 via-white to-transparent" />
-          <div className="relative mx-auto max-w-4xl text-center">
-            <Link
-              to="/publish"
-              className="mb-6 inline-flex items-center gap-1.5 text-sm text-cool-500 transition hover:text-mint-700"
-            >
-              <ArrowLeft size={14} /> Back to Publish on Curio
-            </Link>
-            <Reveal variant="fadeUp" duration={600}>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-mint-200 bg-mint-50 px-4 py-1.5 text-xs font-medium text-mint-700">
-                <Sparkles size={13} /> Publish a Course
-              </span>
-            </Reveal>
-            <Reveal variant="fadeUp" duration={600} delay={80}>
-              <h1 className="mt-4 font-display text-3xl font-bold text-ink sm:text-4xl">
-                Submit Your Course
-              </h1>
-            </Reveal>
-            <Reveal variant="fadeUp" duration={550} delay={160}>
-              <p className="mx-auto mt-3 max-w-xl text-sm text-cool-500 sm:text-base">
-                Fill in your course details below. Our team will review your submission and your course will
-                typically go live within 24 hours.
-              </p>
-            </Reveal>
-          </div>
-        </section>
-
-        <div className="mx-auto max-w-5xl px-4 pb-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-3">
             {/* Form */}
-            <Reveal variant="slideRight" duration={600} delay={60} className="lg:col-span-2">
+            <div className="lg:col-span-2">
               {submitted ? (
                 <div className="rounded-2xl border border-mint-200 bg-mint-50 p-8 text-center">
                   <CheckCircle size={40} className="mx-auto text-mint-600" />
@@ -306,12 +276,11 @@ export function PublishForm() {
                   </button>
                 </form>
               )}
-            </Reveal>
+            </div>
 
             {/* Sidebar — Get Your Course Seen */}
             <div className="lg:col-span-1">
-              <Reveal variant="fadeUp" duration={600} delay={120}>
-                <div className="sticky top-24 rounded-2xl border border-mint-200 bg-gradient-to-br from-mint-50 to-white p-6">
+              <div className="sticky top-24 rounded-2xl border border-mint-200 bg-gradient-to-br from-mint-50 to-white p-6">
                   <DollarSign size={28} className="text-[#10CDB2]" />
                   <h3 className="mt-3 font-display text-lg font-bold text-ink">Get Your Course Seen</h3>
                   <p className="mt-2 text-sm text-cool-500">
@@ -339,7 +308,6 @@ export function PublishForm() {
                     Optional · Activate any time after listing goes live
                   </p>
                 </div>
-              </Reveal>
             </div>
           </div>
         </div>

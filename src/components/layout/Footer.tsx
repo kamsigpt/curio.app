@@ -32,10 +32,10 @@ const columns = [
 ];
 
 const socialLinks = [
-  { Icon: MessageCircle, href: "#", hoverColor: "hover:text-[#25D366] hover:border-[#25D366]" },
-  { Icon: Send, href: "#", hoverColor: "hover:text-[#0088cc] hover:border-[#0088cc]" },
-  { Icon: Instagram, href: "#", hoverColor: "hover:text-[#e4405f] hover:border-[#e4405f]" },
-  { Icon: Facebook, href: "#", hoverColor: "hover:text-[#1877F2] hover:border-[#1877F2]" },
+  { Icon: MessageCircle, href: "https://whatsapp.com/channel/0029VbDE5yODOQIcaabNFp1Q", hoverColor: "hover:text-[#25D366] hover:border-[#25D366]" },
+  { Icon: Send, href: "https://t.me/curiofreecourses", hoverColor: "hover:text-[#0088cc] hover:border-[#0088cc]" },
+  { Icon: Instagram, href: "https://www.instagram.com/hyle.studios?igsh=ZnJoYmIyaTN6bXBl&utm_source=qr", hoverColor: "hover:text-[#e4405f] hover:border-[#e4405f]" },
+  { Icon: Facebook, href: "https://www.facebook.com/share/1KLvZ6R1g3/?mibextid=wwXIfr", hoverColor: "hover:text-[#1877F2] hover:border-[#1877F2]" },
 ];
 
 export function Footer() {
@@ -56,6 +56,8 @@ export function Footer() {
                 <a
                   key={index}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={`flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-white/60 text-mint-700 shadow-glass transition-all ${hoverColor}`}
                 >
                   <Icon size={17} />
