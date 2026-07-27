@@ -6,12 +6,10 @@ import {
   TrendingUp,
   ArrowRight,
   Users,
-  BarChart3,
   Zap,
   Shield,
   Target,
   Award,
-  Sparkles,
   DollarSign,
   CheckCircle,
   Layers,
@@ -100,34 +98,6 @@ const features = [
   },
 ];
 
-const milestones = [
-  {
-    year: "2024",
-    title: "Curio is Born",
-    body: "Frustrated by the scattered nature of online learning, the founding team set out to build a single place where every course is discoverable.",
-  },
-  {
-    year: "2024",
-    title: "First 1,000 Courses",
-    body: "Within months of launch, Curio catalogued over 1,000 courses from 8 platforms, earning trust from learners across Africa and beyond.",
-  },
-  {
-    year: "2025",
-    title: "50,000 Learners",
-    body: "Curio crossed 50,000 monthly active learners, proving that the demand for a unified course discovery platform was real and growing.",
-  },
-  {
-    year: "2025",
-    title: "Publisher Programme",
-    body: "Launched the Publish on Curio programme, enabling independent instructors to list their courses and reach thousands of new students.",
-  },
-  {
-    year: "2026",
-    title: "10,000+ Courses",
-    body: "Curio now indexes over 10,000 courses across 12 platforms, with new content added daily. The marketplace continues to grow rapidly.",
-  },
-];
-
 export function About() {
   return (
     <div>
@@ -151,6 +121,12 @@ export function About() {
             >
               Browse courses <ArrowRight size={16} />
             </Link>
+            <Link
+              to="/signup"
+              className="inline-flex items-center gap-2 rounded-full border border-cool-200 bg-white/70 px-6 py-3 text-sm font-semibold text-ink transition hover:border-cool-300 hover:bg-white"
+            >
+              Join Curio Now
+            </Link>
           </div>
         </div>
       </section>
@@ -165,27 +141,6 @@ export function About() {
                 <p className="mt-1 text-sm text-cool-500">{s.label}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Mission */}
-      <section className="px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-mint-200 bg-mint-50 px-4 py-1.5 text-xs font-medium text-mint-700">
-              <Sparkles size={13} /> Our Mission
-            </span>
-            <h2 className="mt-5 font-display text-3xl font-bold text-ink sm:text-4xl">
-              Make online learning effortless
-            </h2>
-            <p className="mt-4 text-cool-500 leading-relaxed">
-              The internet has millions of courses scattered across dozens of platforms. Finding the right one
-              shouldn't feel like a job. Curio exists to solve that problem — we bring every course into one
-              place so you can discover, compare, and start learning in seconds. Whether you're upskilling for
-              a career change, exploring a new hobby, or looking for the best free course on a topic, Curio
-              makes sure you never miss the right opportunity.
-            </p>
           </div>
         </div>
       </section>
@@ -270,55 +225,6 @@ export function About() {
             >
               Explore the marketplace <ArrowRight size={16} />
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Timeline */}
-      <section className="px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <div className="text-center">
-            <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">Our Journey</h2>
-            <p className="mt-3 text-cool-500">
-              From a simple idea to a platform serving tens of thousands of learners.
-            </p>
-          </div>
-          <div className="relative mt-12 space-y-10">
-            <div className="absolute left-4 top-0 h-full w-px bg-cool-100 sm:left-1/2 sm:-translate-x-px" />
-            {milestones.map((m, i) => (
-              <div key={i} className="relative flex flex-col gap-2 sm:flex-row sm:items-start">
-                {i % 2 === 0 ? (
-                  <>
-                    <div className="flex-1 text-right pr-8 sm:block hidden">
-                      <span className="font-display text-sm font-bold text-mint-600">{m.year}</span>
-                      <h3 className="mt-1 font-display font-semibold text-ink">{m.title}</h3>
-                      <p className="mt-1 text-sm text-cool-500">{m.body}</p>
-                    </div>
-                    <div className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-mint-200 bg-white sm:absolute sm:left-1/2 sm:-translate-x-1/2">
-                      <div className="h-2.5 w-2.5 rounded-full bg-mint-500" />
-                    </div>
-                    <div className="flex-1 pl-8 sm:hidden">
-                      <span className="font-display text-sm font-bold text-mint-600">{m.year}</span>
-                      <h3 className="mt-1 font-display font-semibold text-ink">{m.title}</h3>
-                      <p className="mt-1 text-sm text-cool-500">{m.body}</p>
-                    </div>
-                    <div className="flex-1 hidden sm:block" />
-                  </>
-                ) : (
-                  <>
-                    <div className="flex-1 hidden sm:block" />
-                    <div className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-mint-200 bg-white sm:absolute sm:left-1/2 sm:-translate-x-1/2">
-                      <div className="h-2.5 w-2.5 rounded-full bg-mint-500" />
-                    </div>
-                    <div className="flex-1 pl-8">
-                      <span className="font-display text-sm font-bold text-mint-600">{m.year}</span>
-                      <h3 className="mt-1 font-display font-semibold text-ink">{m.title}</h3>
-                      <p className="mt-1 text-sm text-cool-500">{m.body}</p>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
           </div>
         </div>
       </section>

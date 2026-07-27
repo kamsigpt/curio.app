@@ -323,15 +323,13 @@ export function Publish() {
                 a: "Your course gets featured placement for 30 days across search results, category pages, and recommendation slots. You can track performance from your dashboard.",
               },
             ].map((faq) => (
-              <details
+              <div
                 key={faq.q}
-                className="group rounded-2xl border border-cool-100 bg-white p-5 transition hover:shadow-sm"
+                className="rounded-2xl border border-cool-100 bg-white p-5 transition hover:shadow-sm"
               >
-                <summary className="cursor-pointer list-none font-display text-sm font-semibold text-ink">
-                  {faq.q}
-                </summary>
+                <h3 className="font-display text-sm font-semibold text-ink">{faq.q}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-cool-500">{faq.a}</p>
-              </details>
+              </div>
             ))}
           </Reveal>
         </div>
