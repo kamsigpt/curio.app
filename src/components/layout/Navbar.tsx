@@ -1,21 +1,61 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, Star, Menu, X, LogOut, LayoutDashboard, Shield } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
+import { useCourses } from "@/context/CourseContext";
 
 export function Navbar() {
   const [query, setQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [desktopOpen, setDesktopOpen] = useState(false);
+  const [mobileSuggestOpen, setMobileSuggestOpen] = useState(false);
   const { wishlist } = useWishlist();
   const { profile, signOut } = useAuth();
+  const { courses } = useCourses();
   const navigate = useNavigate();
+  const desktopRef = useRef<HTMLDivElement>(null);
+  const mobileRef = useRef<HTMLDivElement>(null);
+
+  const suggestions = query.trim().length > 0
+    ? courses
+        .filter(
+          (c) =>
+            c.title.toLowerCase().includes(query.toLowerCase()) ||
+            c.tags.some((t) => t.toLowerCase().includes(query.toLowerCase())) ||
+            c.category.name.toLowerCase().includes(query.toLowerCase())
+        )
+        .slice(0, 6)
+    : [];
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (desktopRef.current && !desktopRef.current.contains(e.target as Node)) {
+        setDesktopOpen(false);
+      }
+      if (mobileRef.current && !mobileRef.current.contains(e.target as Node)) {
+        setMobileSuggestOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
-    navigate(query ? `/marketplace?q=${encodeURIComponent(query)}` : "/marketplace");
+    setDesktopOpen(false);
+    setMobileSuggestOpen(false);
+    navigate(query.trim() ? `/marketplace?q=${encodeURIComponent(query.trim())}` : "/marketplace");
+    setMobileOpen(false);
+  }
+
+  function selectSuggestion(title: string) {
+    setQuery(title);
+    setDesktopOpen(false);
+    setMobileSuggestOpen(false);
+    navigate(`/marketplace?q=${encodeURIComponent(title)}`);
     setMobileOpen(false);
   }
 
@@ -26,15 +66,36 @@ export function Navbar() {
           <Logo className="h-14 sm:h-16 lg:h-20" />
         </Link>
 
-        <form onSubmit={handleSearch} className="relative hidden flex-1 max-w-xl md:block">
+        <form onSubmit={handleSearch} className="relative hidden flex-1 max-w-xl md:block" ref={desktopRef}>
           <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-cool-400" size={17} />
           <input
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setDesktopOpen(true);
+            }}
+            onFocus={() => query.trim().length > 0 && setDesktopOpen(true)}
             type="search"
             placeholder="Search for anything you're curious about"
             className="w-full rounded-full border border-white/70 bg-white/55 py-2.5 pl-11 pr-4 text-sm text-ink outline-none transition placeholder:text-cool-400 focus:border-mint-300 focus:bg-white/80 focus:shadow-glow"
           />
+          {desktopOpen && suggestions.length > 0 && (
+            <div className="absolute left-0 top-full z-50 mt-2 w-full overflow-hidden rounded-2xl border border-cool-100 bg-white shadow-xl">
+              {suggestions.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => selectSuggestion(c.title)}
+                  className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition hover:bg-cool-50"
+                >
+                  <Search size={14} className="shrink-0 text-cool-400" />
+                  <div className="min-w-0">
+                    <p className="truncate font-medium text-ink">{c.title}</p>
+                    <p className="truncate text-xs text-cool-400">{c.category.name} · {c.instructor.name}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </form>
 
         <nav className="ml-auto hidden items-center gap-2 rounded-full border border-white/50 bg-white/35 p-1 text-sm font-semibold text-cool-700 md:flex">
@@ -133,15 +194,36 @@ export function Navbar() {
 
       {mobileOpen && (
         <div className="glass-panel mx-3 mt-2 rounded-3xl px-4 py-4 md:hidden">
-          <form onSubmit={handleSearch} className="relative mb-4">
+          <form onSubmit={handleSearch} className="relative mb-4" ref={mobileRef}>
             <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-cool-400" size={17} />
             <input
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setMobileSuggestOpen(true);
+              }}
+              onFocus={() => query.trim().length > 0 && setMobileSuggestOpen(true)}
               type="search"
               placeholder="Search courses"
               className="w-full rounded-full border border-white/70 bg-white/65 py-2.5 pl-10 pr-4 text-sm outline-none"
             />
+            {mobileSuggestOpen && suggestions.length > 0 && (
+              <div className="absolute left-0 top-full z-50 mt-2 w-full overflow-hidden rounded-2xl border border-cool-100 bg-white shadow-xl">
+                {suggestions.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => selectSuggestion(c.title)}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition hover:bg-cool-50"
+                  >
+                    <Search size={14} className="shrink-0 text-cool-400" />
+                    <div className="min-w-0">
+                      <p className="truncate font-medium text-ink">{c.title}</p>
+                      <p className="truncate text-xs text-cool-400">{c.category.name} · {c.instructor.name}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </form>
           <div className="flex flex-col gap-1 text-sm font-medium text-cool-700">
             <Link to="/marketplace" className="rounded-lg px-2 py-2.5 hover:bg-cool-50" onClick={() => setMobileOpen(false)}>
