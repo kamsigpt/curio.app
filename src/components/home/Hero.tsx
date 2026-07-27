@@ -66,17 +66,6 @@ export function Hero() {
                   Search
                 </button>
               </form>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {["React", "Data Science", "UI/UX Design", "Python", "Photography"].map((topic) => (
-                  <Link
-                    key={topic}
-                    to={`/marketplace?q=${encodeURIComponent(topic)}`}
-                    className="rounded-full border border-cool-200/60 bg-white/80 px-3.5 py-1.5 text-xs font-medium text-cool-500 transition hover:border-cool-300 hover:bg-white hover:text-ink"
-                  >
-                    {topic}
-                  </Link>
-                ))}
-              </div>
             </div>
           </Reveal>
           <Reveal variant="fadeUp" duration={500} delay={360}>
