@@ -16,8 +16,8 @@ export function Navbar() {
   const { profile, signOut } = useAuth();
   const { courses } = useCourses();
   const navigate = useNavigate();
-  const desktopRef = useRef<HTMLDivElement>(null);
-  const mobileRef = useRef<HTMLDivElement>(null);
+  const desktopRef = useRef<HTMLFormElement>(null);
+  const mobileRef = useRef<HTMLFormElement>(null);
 
   const suggestions = query.trim().length > 0
     ? courses
