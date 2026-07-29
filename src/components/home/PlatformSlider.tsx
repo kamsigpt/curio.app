@@ -12,14 +12,14 @@ const platforms = [
 
 export function PlatformSlider() {
   return (
-    <section className="bg-white py-12 sm:py-16">
+    <section className="bg-white py-8 sm:py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="mb-10 text-center font-display text-lg font-bold text-ink">
+        <h2 className="mb-6 text-center font-display text-base font-bold text-ink sm:mb-10 sm:text-lg">
           Courses from the <span className="text-[#10CDB2]">Best</span> Learning Platforms
         </h2>
         <div className="relative overflow-hidden">
           <div
-            className="flex gap-6 sm:gap-8"
+            className="flex gap-4 sm:gap-6 md:gap-8"
             style={{
               animation: "slide 25s linear infinite",
             }}
@@ -29,7 +29,7 @@ export function PlatformSlider() {
                 key={`${p.name}-${i}`}
                 src={p.src}
                 alt={p.name}
-                className="h-20 w-72 shrink-0 object-contain sm:h-24 sm:w-80"
+                className="h-12 w-40 shrink-0 object-contain sm:h-16 sm:w-56 md:h-20 md:w-72 lg:h-24 lg:w-80"
               />
             ))}
           </div>

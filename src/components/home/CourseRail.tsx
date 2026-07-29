@@ -21,8 +21,9 @@ export function CourseRail({
   const scroll = (dir: "left" | "right") => {
     const el = scrollRef.current;
     if (!el) return;
-    const step = 304 + 20;
-    el.scrollBy({ left: dir === "left" ? -step : step, behavior: "smooth" });
+    const cardWidth = window.innerWidth < 640 ? 200 : 304;
+    const gap = 20;
+    el.scrollBy({ left: dir === "left" ? -(cardWidth + gap) : cardWidth + gap, behavior: "smooth" });
   };
 
   const checkScroll = () => {
@@ -41,7 +42,7 @@ export function CourseRail({
         </div>
         <Link
           to="/marketplace"
-          className="hidden items-center gap-2 rounded-full border border-white/70 bg-white/60 px-4 py-2 text-sm font-semibold text-mint-700 shadow-glass transition hover:bg-white sm:inline-flex"
+          className="hidden shrink-0 items-center gap-2 rounded-full border border-white/70 bg-white/60 px-4 py-2 text-sm font-semibold text-mint-700 shadow-glass transition hover:bg-white sm:inline-flex"
         >
           View all <ArrowRight size={15} />
         </Link>
@@ -50,18 +51,19 @@ export function CourseRail({
         {canScrollLeft && (
           <button
             onClick={() => scroll("left")}
-            className="absolute -left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-cool-200 bg-white text-cool-500 shadow-lg transition hover:border-mint-300 hover:text-mint-600"
+            className="absolute -left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-cool-200 bg-white text-cool-500 shadow-lg transition hover:border-mint-300 hover:text-mint-600 sm:-left-3 sm:h-10 sm:w-10"
+            aria-label="Scroll left"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={16} className="sm:size-5" />
           </button>
         )}
         <div
           ref={scrollRef}
           onScroll={checkScroll}
-          className="flex gap-5 overflow-hidden"
+          className="flex gap-3 overflow-hidden sm:gap-5"
         >
           {courses.map((course) => (
-            <div key={course.id} className="w-72 shrink-0">
+            <div key={course.id} className="w-[180px] shrink-0 sm:w-64 md:w-72">
               <CourseCard course={course} />
             </div>
           ))}
@@ -69,9 +71,10 @@ export function CourseRail({
         {canScrollRight && (
           <button
             onClick={() => scroll("right")}
-            className="absolute -right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-cool-200 bg-white text-cool-500 shadow-lg transition hover:border-mint-300 hover:text-mint-600"
+            className="absolute -right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-cool-200 bg-white text-cool-500 shadow-lg transition hover:border-mint-300 hover:text-mint-600 sm:-right-3 sm:h-10 sm:w-10"
+            aria-label="Scroll right"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={16} className="sm:size-5" />
           </button>
         )}
       </div>

@@ -38,7 +38,7 @@ export function HowItWorks() {
             Finding your next course takes just four simple steps.
           </p>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {steps.map((step) => (
             <div key={step.n} className="group glass-panel relative rounded-2xl p-6 text-center transition hover:-translate-y-1 hover:border-mint-200">
               <span className="font-display text-3xl font-bold text-mint-200">{step.n}</span>

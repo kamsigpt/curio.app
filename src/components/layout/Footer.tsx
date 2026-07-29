@@ -44,8 +44,8 @@ export function Footer() {
       <div className="flow-lines pointer-events-none absolute inset-x-0 bottom-0 h-40 opacity-35" />
       <div className="pointer-events-none absolute right-0 top-0 h-56 w-56 rounded-full bg-mint-200/40 blur-3xl" />
       <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-10 md:grid-cols-5">
-          <div className="col-span-2">
+        <div className="grid grid-cols-2 gap-6 sm:gap-10 md:grid-cols-5">
+          <div className="col-span-2 sm:col-span-2">
             <Logo className="h-20 sm:h-24 lg:h-28" />
             <p className="mt-5 max-w-xs text-sm leading-6 text-cool-500">
               Curio brings every digital course, from major platforms to independent tutors, into one place, so

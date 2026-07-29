@@ -4,3 +4,5 @@ dist
 *.local
 vite.config.js
 vite.config.d.ts
+*.tsbuildinfo
+.vscode

@@ -209,7 +209,7 @@ export function Dashboard() {
       ) : (
         <Reveal variant="slideRight" duration={600} delay={80} className="mt-8">
           <h2 className="mb-4 font-display text-lg font-semibold text-ink">My Learning</h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
             {enrolled.map(({ course, is_featured }) => (
               <Link
                 key={course.id}
@@ -221,7 +221,7 @@ export function Dashboard() {
                     <Star size={12} className="fill-ink" /> Featured
                   </div>
                 )}
-                <CourseThumb seed={course.id} categoryIcon={course.category.icon} className="h-32 w-full" />
+                <CourseThumb seed={course.id} categoryIcon={course.category.icon} className="h-20 w-full sm:h-32" />
                 <div className="p-4">
                   <p className="text-xs text-cool-400">{course.provider}</p>
                   <h3 className="mt-1 font-display font-semibold text-ink line-clamp-2">{course.title}</h3>

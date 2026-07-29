@@ -158,7 +158,7 @@ export function Marketplace() {
           </div>
 
           {loading ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="animate-pulse rounded-2xl border border-cool-100 bg-white p-4">
                   <div className="h-36 rounded-xl bg-cool-100" />
@@ -173,7 +173,7 @@ export function Marketplace() {
               <p className="mt-1 text-sm text-cool-500">Try clearing a filter or searching a broader term.</p>
             </div>
           ) : (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
               {filtered.map((c) => (
                 <CourseCard key={c.id} course={c} />
               ))}

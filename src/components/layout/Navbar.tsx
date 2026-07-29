@@ -19,6 +19,15 @@ export function Navbar() {
   const desktopRef = useRef<HTMLFormElement>(null);
   const mobileRef = useRef<HTMLFormElement>(null);
 
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
   const suggestions = query.trim().length > 0
     ? courses
         .filter(
@@ -60,10 +69,10 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 px-3 py-2 sm:px-5">
-      <div className="glass-panel mx-auto flex h-16 max-w-7xl items-center gap-3 rounded-full px-4 sm:h-18 sm:px-6 lg:px-7">
+        <header className="sticky top-0 z-50 px-1 py-1.5 sm:px-3 sm:py-2 lg:px-5">
+      <div className="glass-panel mx-auto flex h-12 max-w-7xl items-center gap-1 rounded-full px-3 sm:h-16 sm:gap-3 sm:px-4 lg:h-18 lg:px-7">
         <Link to="/" aria-label="Curio home" className="flex shrink-0 items-center">
-          <Logo className="h-14 sm:h-16 lg:h-20" />
+          <Logo className="h-10 sm:h-14 lg:h-20" />
         </Link>
 
         <form onSubmit={handleSearch} className="relative hidden flex-1 max-w-xl md:block" ref={desktopRef}>
@@ -193,7 +202,13 @@ export function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="glass-panel mx-3 mt-2 rounded-3xl px-4 py-4 md:hidden">
+        <div className="fixed inset-0 z-40 md:hidden" onClick={() => setMobileOpen(false)}>
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
+        </div>
+      )}
+
+      {mobileOpen && (
+        <div className="glass-panel relative z-50 mx-1 mt-2 rounded-3xl px-3 py-3 sm:mx-3 sm:px-4 sm:py-4 md:hidden">
           <form onSubmit={handleSearch} className="relative mb-4" ref={mobileRef}>
             <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-cool-400" size={17} />
             <input
