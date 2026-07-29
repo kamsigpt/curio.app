@@ -58,7 +58,7 @@ export function Dashboard() {
         </div>
         <Link
           to="/marketplace"
-          className="hidden items-center gap-2 rounded-full bg-[#10CDB2] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0BA391] sm:inline-flex"
+          className="inline-flex items-center gap-1 rounded-full bg-[#10CDB2] px-3 py-1.5 text-[10px] font-semibold text-white transition hover:bg-[#0BA391] sm:gap-2 sm:px-5 sm:py-2.5 sm:text-sm"
         >
           <Search size={15} /> Browse Courses
         </Link>
@@ -209,7 +209,7 @@ export function Dashboard() {
       ) : (
         <Reveal variant="slideRight" duration={600} delay={80} className="mt-8">
           <h2 className="mb-4 font-display text-lg font-semibold text-ink">My Learning</h2>
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8">
             {enrolled.map(({ course, is_featured }) => (
               <Link
                 key={course.id}

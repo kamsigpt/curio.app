@@ -70,8 +70,9 @@ export function Reveal({
       className={className}
       style={{
         ...(visible ? visibleStyles[variant] : initialStyles[variant]),
-        transition: `opacity ${duration}ms ease-out, transform ${duration}ms ease-out`,
+        transition: `opacity ${duration}ms cubic-bezier(0.16, 1, 0.3, 1), transform ${duration}ms cubic-bezier(0.16, 1, 0.3, 1)`,
         transitionDelay: `${delay}ms`,
+        willChange: "transform, opacity",
       }}
     >
       {children}

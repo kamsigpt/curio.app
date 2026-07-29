@@ -54,12 +54,12 @@ export function Hero() {
         aria-hidden="true"
         className="absolute inset-0 size-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-white/90 from-0% via-white/70 via-50% to-transparent to-65%" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white/95 from-0% via-white/85 via-60% to-white/70 to-100% sm:bg-gradient-to-r sm:from-white/90 sm:from-0% sm:via-white/70 sm:via-50% sm:to-transparent sm:to-65%" />
       <img
         src={heroPerson}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 right-0 z-10 h-[101%] select-none object-contain drop-shadow-2xl"
+        className="pointer-events-none absolute bottom-0 right-0 z-10 h-[101%] select-none object-contain opacity-30 drop-shadow-2xl sm:opacity-100"
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 bg-gradient-to-b from-transparent to-white" />
       <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

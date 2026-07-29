@@ -42,9 +42,9 @@ export function CourseRail({
         </div>
         <Link
           to="/marketplace"
-          className="hidden shrink-0 items-center gap-2 rounded-full border border-white/70 bg-white/60 px-4 py-2 text-sm font-semibold text-mint-700 shadow-glass transition hover:bg-white sm:inline-flex"
+          className="inline-flex shrink-0 items-center gap-1 rounded-full border border-white/70 bg-white/60 px-2.5 py-1.5 text-[10px] font-semibold text-mint-700 shadow-glass transition hover:bg-white sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
         >
-          View all <ArrowRight size={15} />
+          View all <ArrowRight size={12} className="sm:size-[15px]" />
         </Link>
       </div>
       <div className="relative">

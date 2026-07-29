@@ -69,13 +69,13 @@ export function Navbar() {
   }
 
   return (
-        <header className="sticky top-0 z-50 px-1 py-1.5 sm:px-3 sm:py-2 lg:px-5">
-      <div className="glass-panel mx-auto flex h-12 max-w-7xl items-center gap-1 rounded-full px-3 sm:h-16 sm:gap-3 sm:px-4 lg:h-18 lg:px-7">
+    <header className="sticky top-0 z-50 px-1 py-1.5 sm:px-3 sm:py-2 lg:px-5">
+      <div className="glass-panel mx-auto flex h-12 max-w-7xl items-center gap-0.5 rounded-full px-2 sm:h-14 sm:gap-1.5 sm:px-3 md:h-16 md:gap-3 lg:h-18 lg:px-7">
         <Link to="/" aria-label="Curio home" className="flex shrink-0 items-center">
-          <Logo className="h-10 sm:h-14 lg:h-20" />
+          <Logo className="h-9 sm:h-11 md:h-14 lg:h-20" />
         </Link>
 
-        <form onSubmit={handleSearch} className="relative hidden flex-1 max-w-xl md:block" ref={desktopRef}>
+        <form onSubmit={handleSearch} className="relative hidden flex-1 max-w-xl sm:block" ref={desktopRef}>
           <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-cool-400" size={17} />
           <input
             value={query}
@@ -86,7 +86,7 @@ export function Navbar() {
             onFocus={() => query.trim().length > 0 && setDesktopOpen(true)}
             type="search"
             placeholder="Search for anything you're curious about"
-            className="w-full rounded-full border border-white/70 bg-white/55 py-2.5 pl-11 pr-4 text-sm text-ink outline-none transition placeholder:text-cool-400 focus:border-mint-300 focus:bg-white/80 focus:shadow-glow"
+            className="w-full rounded-full border border-white/70 bg-white/55 py-2 pl-11 pr-4 text-sm text-ink outline-none transition placeholder:text-cool-400 focus:border-mint-300 focus:bg-white/80 focus:shadow-glow md:py-2.5"
           />
           {desktopOpen && suggestions.length > 0 && (
             <div className="absolute left-0 top-full z-50 mt-2 w-full overflow-hidden rounded-2xl border border-cool-100 bg-white shadow-xl">
@@ -107,24 +107,24 @@ export function Navbar() {
           )}
         </form>
 
-        <nav className="ml-auto hidden items-center gap-2 rounded-full border border-white/50 bg-white/35 p-1 text-sm font-semibold text-cool-700 md:flex">
-          <Link to="/marketplace" className="rounded-full px-4 py-2 transition hover:bg-white/75 hover:text-mint-600">
-            View courses
+        <nav className="ml-auto flex items-center gap-px rounded-full border border-white/50 bg-white/35 p-0.5 text-[10px] font-semibold text-cool-700 sm:gap-1 sm:p-1 sm:text-xs md:text-sm">
+          <Link to="/marketplace" className="rounded-full px-2 py-1 transition hover:bg-white/75 hover:text-mint-600 sm:px-3 sm:py-1.5 md:px-4 md:py-2">
+            Courses
           </Link>
-          <Link to="/publish" className="rounded-full px-4 py-2 transition hover:bg-white/75 hover:text-mint-600">
-            Publish on Curio
+          <Link to="/publish" className="rounded-full px-2 py-1 transition hover:bg-white/75 hover:text-mint-600 sm:px-3 sm:py-1.5 md:px-4 md:py-2">
+            Publish
           </Link>
         </nav>
 
         {profile && (
           <Link
             to="/wishlist"
-            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/45 text-ink transition hover:bg-white/80 hover:text-mint-600"
+            className="relative flex h-8 w-8 items-center justify-center rounded-full border border-white/60 bg-white/45 text-ink transition hover:bg-white/80 hover:text-mint-600 sm:h-9 sm:w-9 md:h-10 md:w-10"
             aria-label="Wishlist"
           >
-            <Star size={20} className={wishlist.length > 0 ? "fill-[#10CDB2] text-[#10CDB2]" : ""} />
+            <Star size={16} className={wishlist.length > 0 ? "fill-[#10CDB2] text-[#10CDB2]" : "sm:size-[20px]"} />
             {wishlist.length > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#10CDB2] text-[11px] font-bold text-ink">
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#10CDB2] text-[9px] font-bold text-ink sm:h-5 sm:w-5 sm:text-[11px]">
                 {wishlist.length}
               </span>
             )}
@@ -132,16 +132,16 @@ export function Navbar() {
         )}
 
         {profile ? (
-          <div className="relative hidden md:block">
+          <div className="relative">
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-mint-500 font-display font-bold text-ink shadow-glow"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-mint-500 font-display text-xs font-bold text-ink shadow-glow sm:h-9 sm:w-9 md:h-10 md:w-10 md:text-sm"
             >
               {profile.full_name.charAt(0).toUpperCase()}
             </button>
             {menuOpen && (
               <div
-                className="glass-panel absolute right-0 top-12 w-52 overflow-hidden rounded-2xl py-1"
+                className="glass-panel absolute right-0 top-11 z-50 w-48 overflow-hidden rounded-2xl py-1 sm:w-52"
                 onMouseLeave={() => setMenuOpen(false)}
               >
                 <div className="border-b border-cool-100 px-4 py-2.5">
@@ -176,16 +176,16 @@ export function Navbar() {
             )}
           </div>
         ) : (
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="flex items-center gap-1 sm:gap-2">
             <Link
               to="/login"
-              className="rounded-full px-4 py-2 text-sm font-semibold text-ink transition hover:bg-[#10CDB2] hover:text-white"
+              className="rounded-full px-2 py-1 text-[10px] font-semibold text-ink transition hover:bg-[#10CDB2] hover:text-white sm:px-3 sm:py-1.5 sm:text-xs md:px-4 md:py-2 md:text-sm"
             >
               Log in
             </Link>
             <Link
               to="/signup"
-              className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white shadow-glow transition hover:bg-[#10CDB2]"
+              className="rounded-full bg-ink px-2 py-1 text-[10px] font-semibold text-white shadow-glow transition hover:bg-[#10CDB2] sm:px-3 sm:py-1.5 sm:text-xs md:px-4 md:py-2 md:text-sm"
             >
               Sign up
             </Link>
@@ -193,22 +193,22 @@ export function Navbar() {
         )}
 
         <button
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/50 text-ink md:hidden"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-white/60 bg-white/50 text-ink sm:hidden"
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Toggle menu"
         >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          {mobileOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
       </div>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 md:hidden" onClick={() => setMobileOpen(false)}>
+        <div className="fixed inset-0 z-40 sm:hidden" onClick={() => setMobileOpen(false)}>
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
         </div>
       )}
 
       {mobileOpen && (
-        <div className="glass-panel relative z-50 mx-1 mt-2 rounded-3xl px-3 py-3 sm:mx-3 sm:px-4 sm:py-4 md:hidden">
+        <div className="glass-panel relative z-50 mx-1 mt-2 rounded-3xl px-3 py-3 sm:hidden">
           <form onSubmit={handleSearch} className="relative mb-4" ref={mobileRef}>
             <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-cool-400" size={17} />
             <input
@@ -242,7 +242,10 @@ export function Navbar() {
           </form>
           <div className="flex flex-col gap-1 text-sm font-medium text-cool-700">
             <Link to="/marketplace" className="rounded-lg px-2 py-2.5 hover:bg-cool-50" onClick={() => setMobileOpen(false)}>
-              View courses
+              Browse all courses
+            </Link>
+            <Link to="/publish" className="rounded-lg px-2 py-2.5 hover:bg-cool-50" onClick={() => setMobileOpen(false)}>
+              Publish on Curio
             </Link>
             {profile ? (
               <>
