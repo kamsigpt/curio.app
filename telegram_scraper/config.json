@@ -1,0 +1,12 @@
+{
+  "bot_token": "YOUR_BOT_TOKEN_HERE",
+  "chat_id": "@your_channel_username_or_chat_id",
+  "scrape_url": "https://example.com/courses",
+  "base_url": "https://example.com",
+  "card_selector": ".course-card, .product-card, [class*='course'], [class*='product']",
+  "title_selector": "h2, h3, .title, [class*='title']",
+  "link_selector": "a[href]",
+  "price_selector": ".price, [class*='price'], .amount",
+  "image_selector": "img",
+  "desc_selector": ".description, .desc, p, [class*='desc']"
+}
