@@ -1,19 +1,27 @@
 const faqs = [
   {
     q: "Is Curio free to use?",
-    a: "Yes. Browsing, searching, and comparing courses on Curio is completely free. You only pay when you purchase a course, often at a discount compared to buying directly on the platform.",
+    a: "Yes. Browsing, searching, and saving courses on Curio is free. If a course costs money, you complete the purchase with its provider unless a listing explicitly identifies an authorised Curio checkout.",
   },
   {
     q: "Where do the courses come from?",
-    a: "Curio aggregates courses from Udemy, Coursera, Skillshare, LinkedIn Learning, and independent instructors. We surface the best options across all platforms in one place.",
+    a: "The catalogue contains listings from course providers and approved sources. A provider is only shown when course records are available; a provider name does not mean Curio has a live API partnership with it.",
   },
   {
     q: "How do I know which course is right for me?",
-    a: "Every course shows real ratings, student reviews, curriculum details, and skill level. You can compare side by side so you pick the course that fits your goals — not just the one with the best marketing.",
+    a: "Use the available title, provider, level, category, price, and rating information to compare options. Some providers do not expose every detail, so missing data is not inferred.",
   },
   {
-    q: "Can I publish my own course on Curio?",
-    a: "Absolutely. Independent instructors can publish their courses on Curio, keep their own pricing and brand, and reach learners who are actively searching for their next skill.",
+    q: "Where do I enrol and take the course?",
+    a: "Course access links open the provider's course page. The provider handles enrolment, payment, course delivery, and any certificates it offers.",
+  },
+  {
+    q: "Are free and discounted offers guaranteed to be available?",
+    a: "Offers can change or expire. When an expiry date or last-checked date is available, Curio shows it. Confirm the current price and terms on the provider's page before enrolling.",
+  },
+  {
+    q: "Does Curio track course completion?",
+    a: "My Learning can help you organise saved courses and self-reported progress. Curio only knows a provider-verified completion status when an authorised provider integration supplies it.",
   },
 ];
 

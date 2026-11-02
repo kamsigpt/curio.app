@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Code2, Palette, Briefcase, Megaphone, BarChart3, Camera, Music2, Brain, type LucideIcon } from "lucide-react";
 import { categories } from "@/data/mockData";
+import { useCourses } from "@/context/CourseContext";
 
 const ICONS: Record<string, LucideIcon> = {
   "code-2": Code2,
@@ -14,12 +15,13 @@ const ICONS: Record<string, LucideIcon> = {
 };
 
 export function CategoryGrid() {
+  const { courses } = useCourses();
   return (
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="mb-8 flex items-end justify-between">
         <div>
           <h2 className="font-display text-2xl font-bold text-ink sm:text-3xl">Browse by category</h2>
-          <p className="mt-1 text-sm text-cool-500">Every category, pulled from every provider on Curio.</p>
+          <p className="mt-1 text-sm text-cool-500">Start with a subject, then compare the courses currently listed for it.</p>
         </div>
         <Link to="/marketplace" className="hidden text-sm font-semibold text-mint-700 hover:text-mint-800 sm:block">
           View all →
@@ -38,7 +40,10 @@ export function CategoryGrid() {
                 <Icon size={20} />
               </span>
               <span className="font-display font-semibold text-ink">{cat.name}</span>
-              <span className="text-xs text-cool-500">{cat.course_count} courses</span>
+              <span className="text-xs text-cool-500">{(() => {
+                const count = courses.filter((course) => course.category.slug === cat.slug).length;
+                return count ? `${count} ${count === 1 ? "course" : "courses"}` : "Explore this topic";
+              })()}</span>
             </Link>
           );
         })}

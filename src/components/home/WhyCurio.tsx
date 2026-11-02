@@ -1,45 +1,45 @@
-import { Award, Search, Star, Zap, Route, Gem, LayoutDashboard, Brain } from "lucide-react";
+import { Search, SlidersHorizontal, BookmarkCheck, ExternalLink, Compass, WalletCards, ShieldCheck, Sparkles } from "lucide-react";
 
 const features = [
   {
-    icon: Award,
-    title: "Free Premium Courses",
-    body: "Access premium Udemy courses for free through time-limited coupon deals updated regularly. Learn more while spending less.",
-  },
-  {
     icon: Search,
-    title: "One Search, Every Platform",
-    body: "Discover courses from leading learning platforms and independent experts without jumping between multiple websites.",
+    title: "Search across the catalogue",
+    body: "Look for a course by topic, skill, instructor, or provider from one discovery page.",
   },
   {
-    icon: Star,
-    title: "Curated Quality",
-    body: "Skip the overwhelm. We highlight valuable, highly-rated courses so you can spend less time searching and more time learning.",
+    icon: SlidersHorizontal,
+    title: "Compare useful details",
+    body: "Filter by provider, category, level, price, offer type, and rating where course data supports it.",
   },
   {
-    icon: Zap,
-    title: "Learn Faster",
-    body: "Find the right course for your goals in minutes, whether you're learning design, programming, business, marketing, or AI.",
+    icon: BookmarkCheck,
+    title: "Keep a learning shortlist",
+    body: "Save interesting courses and use My Learning to organise what you want to study next.",
   },
   {
-    icon: Route,
-    title: "Unlimited Learning Paths",
-    body: "Explore thousands of courses across diverse subjects, skill levels, and career paths from beginner to expert.",
+    icon: ExternalLink,
+    title: "Learn with the provider",
+    body: "Curio helps you find a course. Enrolment, payment, and course delivery happen on the provider's platform.",
   },
   {
-    icon: Gem,
-    title: "Hidden Gems Included",
-    body: "Discover exceptional courses and instructors you might never find through traditional platform searches.",
+    icon: Compass,
+    title: "Explore by skill or category",
+    body: "Move from a broad interest to a focused course search with category, level, and topic filters.",
   },
   {
-    icon: LayoutDashboard,
-    title: "Everything in One Place",
-    body: "Your central hub for online learning—browse, discover, and explore courses from across the web in one seamless experience.",
+    icon: WalletCards,
+    title: "Find lower-cost options",
+    body: "Compare free and discounted listings alongside paid courses, with offer dates shown when available.",
   },
   {
-    icon: Brain,
-    title: "Built for Curious Minds",
-    body: "Whether you're advancing your career, starting a side hustle, or exploring a new passion, Curio helps you find the perfect course.",
+    icon: ShieldCheck,
+    title: "Clear course destinations",
+    body: "Course pages identify the provider and take you to its listing. Curio does not claim to host third-party lessons.",
+  },
+  {
+    icon: Sparkles,
+    title: "Built for curious minds",
+    body: "Whether you're building a career skill or following a personal interest, Curio makes the next learning option easier to find.",
   },
 ];
 
@@ -52,8 +52,7 @@ export function WhyCurio() {
             Why Learners Choose <span className="text-[#10CDB2]">Curio</span>
           </h2>
           <p className="mt-3 text-sm text-cool-500 sm:text-base">
-            Discover better courses, save time, and unlock learning opportunities from across the
-            web—all in one place.
+            Curio organises learning opportunities so you can compare options, spot affordable courses, and choose where to continue.
           </p>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

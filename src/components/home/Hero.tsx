@@ -66,15 +66,13 @@ export function Hero() {
         <div className="max-w-2xl">
           <Reveal variant="fadeUp" duration={650}>
             <h1 className="font-display text-4xl font-extrabold tracking-tight text-ink sm:text-5xl lg:text-6xl">
-              Learn Anything.{" "}
-              <span className="text-[#10CDB2]">Master Everything.</span>
+              Find a course worth your time.{" "}
+              <span className="text-[#10CDB2]">Start with curiosity.</span>
             </h1>
           </Reveal>
           <Reveal variant="fadeUp" duration={600} delay={120}>
             <p className="mt-4 text-base text-cool-700 sm:text-lg">
-              Discover courses from leading educators, learning platforms, and industry experts—all in one
-              place. <span className="text-[#10CDB2]">Curio</span> helps you find the right learning path faster, explore new opportunities, and
-              build skills that move your career and ambitions forward. Start learning <span className="text-[#10CDB2]">today</span>.
+              Search and compare free, discounted, and affordable courses from multiple providers. Save the ones that interest you, then continue to the provider for enrolment and learning.
             </p>
           </Reveal>
           <Reveal variant="fadeUp" duration={550} delay={240}>
@@ -92,7 +90,7 @@ export function Hero() {
                     setOpen(true);
                   }}
                   onFocus={() => query.trim().length > 0 && setOpen(true)}
-                  placeholder="Try 'React' or 'Data Science'..."
+              placeholder="Search a skill, topic, instructor, or provider..."
                   className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-cool-400"
                 />
                 <button
@@ -123,10 +121,9 @@ export function Hero() {
           </Reveal>
           <Reveal variant="fadeUp" duration={500} delay={360}>
             <p className="mt-6 text-xs text-cool-500">
-              Not sure where to start?{" "}
-              <Link to="/marketplace" className="font-medium text-mint-700 underline-offset-2 hover:underline">
-                Browse all courses →
-              </Link>
+              <Link to="/marketplace" className="font-medium text-mint-700 underline-offset-2 hover:underline">Explore all courses →</Link>
+              <span className="mx-2 text-cool-300" aria-hidden="true">·</span>
+              <Link to="/deals" className="font-medium text-mint-700 underline-offset-2 hover:underline">Find free courses and deals →</Link>
             </p>
           </Reveal>
         </div>

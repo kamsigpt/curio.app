@@ -1,29 +1,29 @@
-import { UserPlus, Search, ShoppingCart, Play } from "lucide-react";
+import { Search, SlidersHorizontal, ExternalLink, Bookmark } from "lucide-react";
 
 const steps = [
   {
     n: "01",
-    icon: UserPlus,
-    title: "Create Your Account",
-    body: "Sign up in seconds and unlock access to Curio's growing library of courses, deals, and learning opportunities.",
+    icon: Search,
+    title: "Search for a skill",
+    body: "Enter a topic, instructor, or provider to see relevant courses in the current Curio catalogue.",
   },
   {
     n: "02",
-    icon: Search,
-    title: "Explore the Course Library",
-    body: "Search and discover courses from top learning platforms and independent educators all in one place.",
+    icon: SlidersHorizontal,
+    title: "Compare your options",
+    body: "Narrow the list by level, category, price, deal status, and ratings when reliable ratings are available.",
   },
   {
     n: "03",
-    icon: ShoppingCart,
-    title: "Add Courses to Your Cart",
-    body: "Found something you like? Save it to your cart and continue exploring without missing a great course.",
+    icon: Bookmark,
+    title: "Save courses to revisit",
+    body: "Sign in to save a shortlist and keep your personal learning activity organised in My Learning.",
   },
   {
     n: "04",
-    icon: Play,
-    title: "Checkout & Start Learning",
-    body: "Complete your purchase and begin learning immediately. Your next skill is just a few clicks away.",
+    icon: ExternalLink,
+    title: "Continue with the provider",
+    body: "Open the original course page to confirm current details, enrol, and learn on that provider's platform.",
   },
 ];
 
@@ -35,7 +35,7 @@ export function HowItWorks() {
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <h2 className="font-display text-2xl font-bold text-ink sm:text-3xl">How <span className="text-[#10CDB2]">Curio</span> Works</h2>
           <p className="mt-2 text-sm text-cool-500">
-            Finding your next course takes just four simple steps.
+            From your first search to the course provider, Curio keeps course discovery in one clear flow.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
