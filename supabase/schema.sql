@@ -81,6 +81,16 @@ create table if not exists public.courses (
   thumbnail_url text,
   provider text not null default 'Curio Original',
   external_url text,
+  canonical_url text,
+  affiliate_url text,
+  currency text not null default 'USD',
+  pricing_type text check (pricing_type in ('free', 'temporarily_free', 'discounted', 'paid', 'unavailable')),
+  offer_expires_at timestamptz,
+  verified_at timestamptz,
+  publication_status text not null default 'approved' check (publication_status in ('pending', 'approved', 'rejected', 'needs_review', 'expired', 'archived')),
+  source_name text,
+  source_course_id text,
+  access_type text not null default 'external' check (access_type in ('external', 'curio_authorized', 'free')),
   instructor_id uuid references public.instructors(id) on delete set null,
   category_id uuid references public.categories(id) on delete set null,
   level text not null default 'All Levels' check (level in ('Beginner', 'Intermediate', 'Advanced', 'All Levels')),
@@ -106,6 +116,7 @@ create table if not exists public.courses (
 create index if not exists courses_category_idx on public.courses(category_id);
 create index if not exists courses_provider_idx on public.courses(provider);
 create index if not exists courses_slug_idx on public.courses(slug);
+create unique index if not exists courses_provider_source_uidx on public.courses(provider, source_course_id) where source_course_id is not null;
 
 alter table public.courses enable row level security;
 drop policy if exists "Courses are public" on public.courses;
@@ -216,3 +227,18 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+-- Privacy-minimal outbound activity; no user identity or request metadata is stored.
+create table if not exists public.outbound_clicks (
+  id uuid primary key default uuid_generate_v4(),
+  course_id uuid not null references public.courses(id) on delete cascade,
+  provider text not null,
+  is_affiliate boolean not null default false,
+  clicked_at timestamptz not null default now()
+);
+
+create index if not exists outbound_clicks_course_date_idx on public.outbound_clicks(course_id, clicked_at desc);
+create index if not exists outbound_clicks_provider_date_idx on public.outbound_clicks(provider, clicked_at desc);
+alter table public.outbound_clicks enable row level security;
+drop policy if exists "Record outbound clicks" on public.outbound_clicks;
+create policy "Record outbound clicks" on public.outbound_clicks for insert to anon, authenticated with check (true);

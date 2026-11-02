@@ -4,7 +4,6 @@ import { Shield, CheckCircle2, XCircle, DollarSign, Users, BookOpen, BarChart3, 
 import { useAuth } from "@/context/AuthContext";
 import { useCourses } from "@/context/CourseContext";
 import { formatPrice } from "@/lib/utils";
-import { courses as mockCourses } from "@/data/mockData";
 import { categories } from "@/data/mockData";
 import type { AdminPermission, Course, Level } from "@/lib/types";
 import { ADMIN_PERMISSIONS_LIST, SUPER_ADMIN_EMAIL } from "@/lib/types";
@@ -91,10 +90,10 @@ export function Admin() {
 
   const published = courses.filter((c) => c.id.startsWith("submitted-"));
   const pending = published.filter((c) => !approved.includes(c.id));
-  const totalRevenue = useMemo(
-    () => mockCourses.reduce((s, c) => s + c.price, 0) + approved.length * 10,
-    [approved.length]
-  );
+  const freeAndDealCount = courses.filter((course) =>
+    (course.pricing_type !== "unavailable" && (course.price === 0 || course.pricing_type === "free" || course.pricing_type === "temporarily_free")) ||
+    (course.original_price != null && course.original_price > course.price)
+  ).length;
 
   const allowedTabs = useMemo(() => {
     const perms = getAdminPermissions(userEmail);
@@ -297,9 +296,9 @@ export function Admin() {
               <p className="text-xs text-cool-500">Admins</p>
             </div>
             <div className="rounded-2xl border border-cool-100 bg-white p-4">
-              <DollarSign size={20} className="text-[#10CDB2]" />
-              <p className="mt-3 font-display text-2xl font-bold text-ink">{formatPrice(totalRevenue)}</p>
-              <p className="text-xs text-cool-500">Est. revenue</p>
+              <BookOpen size={20} className="text-[#10CDB2]" />
+              <p className="mt-3 font-display text-2xl font-bold text-ink">{freeAndDealCount}</p>
+              <p className="text-xs text-cool-500">Free & deal listings</p>
             </div>
           </div>
 

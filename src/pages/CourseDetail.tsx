@@ -19,7 +19,7 @@ import { CourseCard } from "@/components/ui/CourseCard";
 import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCourses } from "@/context/CourseContext";
-import { formatPrice, totalLessons } from "@/lib/utils";
+import { courseDestination, formatPrice, recordOutboundClick, totalLessons, usesAffiliateDestination } from "@/lib/utils";
 import type { Course } from "@/lib/types";
 
 export function CourseDetail() {
@@ -227,7 +227,7 @@ export function CourseDetail() {
         </div>
 
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <PurchaseCard course={course} wishlisted={wishlisted} profile={profile} onToggleWishlist={handleToggleWishlist} />
+          <PurchaseCard course={course} wishlisted={wishlisted} onToggleWishlist={handleToggleWishlist} />
         </div>
       </div>
 
@@ -248,43 +248,44 @@ export function CourseDetail() {
 function PurchaseCard({
   course,
   wishlisted,
-  profile,
   onToggleWishlist,
 }: {
   course: Course;
   wishlisted: boolean;
-  profile: any;
   onToggleWishlist: () => void;
 }) {
-  const navigate = useNavigate();
+  const destination = courseDestination(course);
+  const offerExpired = Boolean(course.offer_expires_at && new Date(course.offer_expires_at).getTime() <= Date.now());
+  const hasDiscount = course.original_price != null && course.original_price > course.price && !offerExpired;
   return (
     <div className="lg:sticky lg:top-24 lg:self-start">
       <div className="overflow-hidden rounded-2xl border border-cool-100 bg-white text-ink shadow-cardHover">
         <CourseThumb seed={course.id} categoryIcon={course.category.icon} imageUrl={course.thumbnail_url} alt={course.title} className="h-44 w-full" />
         <div className="p-5">
           <div className="flex items-baseline gap-2">
-            <span className="font-display text-3xl font-bold">{formatPrice(course.price)}</span>
-            {course.original_price && (
-              <span className="text-sm text-cool-400 line-through">{formatPrice(course.original_price)}</span>
+            <span className="font-display text-3xl font-bold">{course.pricing_type === "unavailable" ? "Price unavailable" : formatPrice(course.price, course.currency)}</span>
+            {hasDiscount && (
+              <span className="text-sm text-cool-400 line-through">{formatPrice(course.original_price!, course.currency)}</span>
             )}
           </div>
-          {course.original_price && (
+          {hasDiscount && (
             <p className="mt-1 text-xs font-semibold text-mint-700">
-              {Math.round(100 - (course.price / course.original_price) * 100)}% off - limited time
+              {Math.round(100 - (course.price / course.original_price!) * 100)}% off{course.offer_expires_at ? ` · Offer ends ${new Date(course.offer_expires_at).toLocaleDateString()}` : ""}
             </p>
           )}
+          {offerExpired && <p className="mt-1 text-xs font-medium text-cool-500">The listed offer has ended. Check current pricing with the provider.</p>}
 
-          {course.external_url ? (
+          {destination ? (
             <a
-              href={profile ? course.external_url : "#"}
-              target={profile ? "_blank" : undefined}
-              rel={profile ? "noopener noreferrer" : undefined}
-              onClick={(e) => {
-                if (!profile) { e.preventDefault(); navigate(`/signup?redirect=/course/${course.slug}`); }
+              href={destination}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => {
+                recordOutboundClick(course);
               }}
               className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-mint-500 py-3 text-sm font-semibold text-ink transition hover:bg-mint-600"
             >
-              Open course <ExternalLink size={16} />
+              {(course.price === 0 && course.pricing_type !== "unavailable") ? "Access free course" : "View on provider"} <ExternalLink size={16} />
             </a>
           ) : (
             <button
@@ -299,10 +300,11 @@ function PurchaseCard({
               {wishlisted ? "Wishlisted" : "Add to wishlist"}
             </button>
           )}
-          <p className="mt-4 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-xs leading-relaxed text-red-700">
-            <span className="mt-0.5 shrink-0 font-bold">⚠</span>
-            <span>Enroll with coupons immediately — they expire within 6 days or slots can be filled up quickly.</span>
+          <p className="mt-4 rounded-lg border border-cool-100 bg-cool-50 px-3 py-2.5 text-xs leading-relaxed text-cool-600">
+            Enrolment and learning are handled by {course.provider}. Curio does not host this course.
           </p>
+          {usesAffiliateDestination(course) && <p className="mt-2 text-xs leading-relaxed text-cool-500">Curio may earn a commission if you enrol through this link. Your price is not affected.</p>}
+          {course.verified_at && <p className="mt-2 text-xs text-cool-400">Last checked {new Date(course.verified_at).toLocaleDateString()}</p>}
         </div>
       </div>
     </div>

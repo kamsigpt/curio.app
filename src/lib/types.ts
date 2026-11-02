@@ -51,6 +51,16 @@ export interface Course {
   thumbnail_url: string;
   provider: string;
   external_url?: string;
+  canonical_url?: string;
+  affiliate_url?: string;
+  currency?: string;
+  pricing_type?: "free" | "temporarily_free" | "discounted" | "paid" | "unavailable";
+  offer_expires_at?: string | null;
+  verified_at?: string | null;
+  publication_status?: "pending" | "approved" | "rejected" | "needs_review" | "expired" | "archived";
+  source_name?: string;
+  source_course_id?: string;
+  access_type?: "external" | "curio_authorized" | "free";
   instructor: Instructor;
   category: Category;
   level: Level;

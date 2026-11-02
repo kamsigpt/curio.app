@@ -1,11 +1,12 @@
 import { memo } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { CalendarDays, Check, Clock, ExternalLink, GraduationCap, ShoppingCart, Star } from "lucide-react";
+import { Link } from "react-router-dom";
+import { CalendarDays, ExternalLink, GraduationCap, Star } from "lucide-react";
 import type { Course } from "@/lib/types";
 import { Badge } from "./Badge";
 import { CourseThumb } from "./CourseThumb";
 import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
+import { courseDestination, formatPrice, recordOutboundClick } from "@/lib/utils";
 
 function isBoosted(boosted_until?: string | null): boolean {
   if (!boosted_until) return false;
@@ -37,11 +38,13 @@ function relativeTime(value?: string): string | null {
 export const CourseCard = memo(function CourseCard({ course }: { course: Course }) {
   const { toggleItem, isWishlisted } = useWishlist();
   const { profile } = useAuth();
-  const navigate = useNavigate();
   const wishlisted = isWishlisted(course.id);
   const featured = isBoosted(course.boosted_until);
   const lastUpdated = formatLastUpdated(course.last_updated);
   const visibleTags = course.tags.slice(0, 3);
+  const destination = courseDestination(course);
+  const offerExpired = Boolean(course.offer_expires_at && new Date(course.offer_expires_at).getTime() <= Date.now());
+  const hasDiscount = course.original_price != null && course.original_price > course.price && !offerExpired;
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-xl border border-cool-100 bg-white text-ink shadow-sm transition-all hover:-translate-y-1 hover:border-[#10CDB2] hover:shadow-md" style={{ contentVisibility: "auto" }}>
@@ -138,21 +141,28 @@ export const CourseCard = memo(function CourseCard({ course }: { course: Course 
               </span>
             )}
           </div>
+          <div className="mt-auto flex items-baseline gap-2 pt-2">
+            <span className="font-display text-sm font-bold text-ink sm:text-base">{course.pricing_type === "unavailable" ? "Price unavailable" : formatPrice(course.price, course.currency)}</span>
+            {hasDiscount && <span className="text-xs text-cool-400 line-through">{formatPrice(course.original_price!, course.currency)}</span>}
+            {hasDiscount && <Badge tone="amber" className="ml-auto text-[10px]">{Math.round((1 - course.price / course.original_price!) * 100)}% off</Badge>}
+            {offerExpired && <Badge tone="outline" className="ml-auto text-[10px]">Offer ended</Badge>}
+            {!hasDiscount && (course.pricing_type === "temporarily_free" || course.pricing_type === "free" || (course.price === 0 && course.pricing_type !== "unavailable")) && <Badge tone="mint" className="ml-auto text-[10px]">{course.pricing_type === "temporarily_free" ? "Temporarily free" : "Free"}</Badge>}
+          </div>
         </div>
       </Link>
       <div className="px-2 pb-2 sm:px-3 sm:pb-3 md:px-4 md:pb-4">
-        {course.external_url ? (
+        {destination ? (
           <a
-            href={profile ? course.external_url : "#"}
-            target={profile ? "_blank" : undefined}
-            rel={profile ? "noopener noreferrer" : undefined}
+            href={destination}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={(e) => {
               e.stopPropagation();
-              if (!profile) navigate(`/signup?redirect=/course/${course.slug}`);
+              recordOutboundClick(course);
             }}
             className="flex h-8 w-full items-center justify-center gap-1 rounded-xl bg-[#10CDB2] px-3 text-[10px] font-extrabold text-white transition hover:bg-mint-700 sm:h-10 sm:gap-2 sm:px-4 sm:text-sm md:h-12"
           >
-            Enroll Now <ExternalLink size={12} className="sm:size-4" />
+            {(course.price === 0 && course.pricing_type !== "unavailable") ? "Access course" : "View on provider"} <ExternalLink size={12} className="sm:size-4" />
           </a>
         ) : (
           <Link

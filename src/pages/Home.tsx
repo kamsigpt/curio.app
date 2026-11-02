@@ -1,13 +1,8 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { Hero } from "@/components/home/Hero";
-import { PlatformSlider } from "@/components/home/PlatformSlider";
-import { WhyCurio } from "@/components/home/WhyCurio";
 import { CourseRail } from "@/components/home/CourseRail";
-import { HowItWorks } from "@/components/home/HowItWorks";
-import { InstructorCTA } from "@/components/home/InstructorCTA";
-import { Faq } from "@/components/home/Faq";
-import { Newsletter } from "@/components/home/Newsletter";
 import { useCourses } from "@/context/CourseContext";
+import { CategoryGrid } from "@/components/home/CategoryGrid";
 
 export function Home() {
   const { courses } = useCourses();
@@ -16,24 +11,26 @@ export function Home() {
     const dateB = b.last_updated ? new Date(b.last_updated).getTime() : 0;
     return dateB - dateA;
   });
-  const newReleases = sorted.slice(0, 4);
+  const newReleases = sorted.slice(0, 6);
+  const freeCourses = courses.filter((course) => course.pricing_type !== "unavailable" && (course.price === 0 || course.pricing_type === "free")).slice(0, 6);
+  const deals = courses.filter((course) =>
+    (course.pricing_type === "temporarily_free" || (course.original_price != null && course.original_price > course.price)) &&
+    (!course.offer_expires_at || new Date(course.offer_expires_at).getTime() > Date.now())
+  ).slice(0, 6);
 
   return (
     <>
       <Hero />
-      <Reveal variant="liquidGlass" duration={700}><PlatformSlider /></Reveal>
-      <Reveal variant="popIn" duration={650} delay={80}><WhyCurio /></Reveal>
       <Reveal variant="slideLeft" duration={600} delay={60}>
         <CourseRail
-          title="New releases"
-          subtitle="Recently published or updated by their instructors."
+          title="Recently added"
+          subtitle="Fresh learning opportunities from course providers."
           courses={newReleases}
         />
       </Reveal>
-      <Reveal variant="popIn" duration={650} delay={80}><HowItWorks /></Reveal>
-      <Reveal variant="liquidGlass" duration={700} delay={100}><InstructorCTA /></Reveal>
-      <Reveal variant="fadeUp" duration={550} delay={50}><Faq /></Reveal>
-      <Reveal variant="scaleIn" duration={650} delay={80}><Newsletter /></Reveal>
+      <Reveal variant="fadeUp" duration={600}><CategoryGrid /></Reveal>
+      {freeCourses.length > 0 && <Reveal variant="slideLeft" duration={600}><CourseRail title="Free courses" subtitle="Explore courses currently listed at no cost." courses={freeCourses} viewAllHref="/marketplace?price=free" /></Reveal>}
+      {deals.length > 0 && <Reveal variant="slideLeft" duration={600}><CourseRail title="Free & discounted" subtitle="Offers with current pricing information." courses={deals} viewAllHref="/deals" /></Reveal>}
     </>
   );
 }

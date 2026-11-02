@@ -8,6 +8,7 @@ export function CourseRail({
   title,
   subtitle,
   courses,
+  viewAllHref = "/marketplace",
 }: {
   title: string;
   subtitle?: string;
@@ -41,7 +42,7 @@ export function CourseRail({
           {subtitle && <p className="mt-1 text-sm text-cool-500">{subtitle}</p>}
         </div>
         <Link
-          to="/marketplace"
+          to={viewAllHref}
           className="inline-flex shrink-0 items-center gap-1 rounded-full border border-white/70 bg-white/60 px-2.5 py-1.5 text-[10px] font-semibold text-mint-700 shadow-glass transition hover:bg-white sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
         >
           View all <ArrowRight size={12} className="sm:size-[15px]" />
@@ -67,6 +68,7 @@ export function CourseRail({
               <CourseCard course={course} />
             </div>
           ))}
+          {courses.length === 0 && <p className="py-8 text-sm text-cool-500">New listings will appear here when they are available.</p>}
         </div>
         {canScrollRight && (
           <button

@@ -109,10 +109,10 @@ export function Navbar() {
 
         <nav className="ml-auto flex items-center gap-px rounded-full border border-white/50 bg-white/35 p-0.5 text-[10px] font-semibold text-cool-700 sm:gap-1 sm:p-1 sm:text-xs md:text-sm">
           <Link to="/marketplace" className="rounded-full px-2 py-1 transition hover:bg-white/75 hover:text-mint-600 sm:px-3 sm:py-1.5 md:px-4 md:py-2">
-            Courses
+            Explore
           </Link>
-          <Link to="/publish" className="rounded-full px-2 py-1 transition hover:bg-white/75 hover:text-mint-600 sm:px-3 sm:py-1.5 md:px-4 md:py-2">
-            Publish
+          <Link to="/deals" className="rounded-full px-2 py-1 transition hover:bg-white/75 hover:text-mint-600 sm:px-3 sm:py-1.5 md:px-4 md:py-2">
+            Free & Deals
           </Link>
         </nav>
 
@@ -244,8 +244,8 @@ export function Navbar() {
             <Link to="/marketplace" className="rounded-lg px-2 py-2.5 hover:bg-cool-50" onClick={() => setMobileOpen(false)}>
               Browse all courses
             </Link>
-            <Link to="/publish" className="rounded-lg px-2 py-2.5 hover:bg-cool-50" onClick={() => setMobileOpen(false)}>
-              Publish on Curio
+            <Link to="/deals" className="rounded-lg px-2 py-2.5 hover:bg-cool-50" onClick={() => setMobileOpen(false)}>
+              Free courses & deals
             </Link>
             {profile ? (
               <>

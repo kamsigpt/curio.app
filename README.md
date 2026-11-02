@@ -1,8 +1,7 @@
-# Curio — Digital Course Marketplace
+# Curio — Course Discovery
 
-Curio is a web marketplace for digital courses: courses from major platforms (Udemy, Coursera) and
-independent tutors are all listed, compared and purchased in one place, like an e-commerce store
-built specifically for learning.
+Curio helps learners discover and compare free, discounted, and affordable courses from external
+providers. Learners enrol and study with the provider. Curio does not host third-party course content.
 
 Brand: mint `#27F5D6` on white, `Sora` for display type, `Inter` for body text — matching the
 provided brand guideline.
@@ -16,9 +15,8 @@ provided brand guideline.
   enrollments and cart
 - **lucide-react** — icon set
 
-The app runs in **live development mode** connected to a real Supabase project for auth and data
-storage. Course catalogue, user profiles, enrollments, and cart all sync with Supabase tables
-(`categories`, `instructors`, `courses`, `cart_items`, `enrollments`). When Supabase credentials
+When configured, authentication, the course catalogue, saved courses, and personal learning
+progress use Supabase tables (`categories`, `instructors`, `courses`, `cart_items`, `enrollments`). When Supabase credentials
 are not present, the app falls back to a local mock catalogue (`src/data/mockData.ts`) and
 "fake" auth in `localStorage` (see `src/lib/supabase.ts` → `isSupabaseConfigured`).
 
@@ -46,8 +44,7 @@ Open http://localhost:5173.
    ```
    https://<your-project>.supabase.co/auth/v1/callback
    ```
-6. Restart the dev server. Sign-up/login now create real Supabase Auth users, cart items sync
-   to the `cart_items` table, and purchases insert rows into `enrollments`.
+6. Restart the dev server. Sign-up/login use Supabase Auth and saved courses sync to `cart_items`.
 
 ## Project structure
 
@@ -59,27 +56,41 @@ src/
     home/         Landing page sections (Hero, CategoryGrid, CourseRail, etc.)
   context/
     AuthContext.tsx   Supabase auth + demo-mode fallback
-    CartContext.tsx   Cart state, persisted to localStorage
+    WishlistContext.tsx Saved courses, synced through cart_items
   data/
     mockData.ts        Demo catalogue (categories, instructors, courses)
   lib/
     supabase.ts         Supabase client + isSupabaseConfigured flag
-    enrollment.ts        Enrollment writes (Supabase or local demo)
+    enrollment.ts        Personal progress writes (Supabase or local demo)
     types.ts              Shared TypeScript types
     utils.ts                Formatting helpers
   pages/
     Home, Marketplace, CourseDetail, Cart, Checkout, Login, Signup, Dashboard, NotFound
 supabase/
   schema.sql      Full Postgres schema + RLS policies
+  migrations/     Additive schema updates
 ```
+
+## Discovery data and outbound links
+
+Run `supabase/migrations/202611020001_discovery_fields.sql` against an existing project to add
+currency, pricing/offer state, separate canonical and affiliate destinations, source provenance,
+and outbound click records. New Supabase installations can use the updated `supabase/schema.sql`.
+The migration is additive and preserves existing course records.
+
+Course access uses a valid stored affiliate destination when present, then falls back to the
+provider URL. No provider API/feed adapter, secure redirect server, affiliate conversion feed, or
+verified Curio checkout is configured in this repository. Outbound click counts are browser-originated
+events and are directional analytics, not proof of enrolment or commission. See
+[`docs/SYSTEM_AUDIT.md`](docs/SYSTEM_AUDIT.md) for the system audit and remaining limitations.
 
 ## What's intentionally simplified
 
 This is a complete, production-shaped starting point, not a finished marketplace. A few things
 are deliberately stubbed so you can wire in your own choices:
 
-- **Payments**: the checkout form simulates a successful charge. Swap the `setTimeout` in
-  `src/pages/Checkout.tsx` for a real Stripe/Paystack/Flutterwave integration.
+- **Payments**: the existing Paystack popup callback is not server-verified and must not be used as
+  proof of payment. This repository does not provide a verified Curio course checkout.
 - **Instructor uploads**: there's no course-authoring UI yet — courses are seeded directly into
   the `courses` table. The "Teach on Curio" entry point in the navbar/marketplace is in place for
   when you build that flow.

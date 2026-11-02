@@ -42,6 +42,7 @@ function AppRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/deals" element={<Marketplace dealsOnly />} />
           <Route path="/course/:slug" element={<CourseDetail />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/login" element={<Login />} />
